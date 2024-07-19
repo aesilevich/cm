@@ -1,0 +1,4 @@
+struct my_record {
+};
+
+typedef my_typedef = my_record const;

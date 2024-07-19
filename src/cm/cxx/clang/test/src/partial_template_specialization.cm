@@ -1,0 +1,28 @@
+template struct str<type X1, type Y1> {
+    injected struct str;
+
+    template struct nested<type X2, type Y2> {
+        injected struct nested;
+        field my_field: X1;
+        var is_spec: bool const;
+    };
+
+    template_partial_specialization<type T> struct nested<T, Y1> {
+        var is_spec: bool const;
+    };
+};
+
+template_instantiation struct str<int, float> {
+    template struct nested<type X2, type Y2> {
+        injected struct nested;
+    };
+
+    template_instantiation struct nested<double, char> {
+        field my_field: int;
+        var is_spec: bool const;
+    };
+
+    template_instantiation struct nested<double, float> {
+        var is_spec: bool const;
+    };
+};

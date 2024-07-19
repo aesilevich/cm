@@ -1,0 +1,8 @@
+template struct str<type T1, type T2> {
+    injected struct str;
+    method foo(x: T1, y: T2) -> void;
+};
+
+template_specialization struct str<int, float> {
+    method bar() -> void;
+};

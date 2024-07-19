@@ -1,0 +1,3 @@
+template func foo<type T, var val: T>() -> void;
+template_instantiation func foo<int, 10>() -> void;
+func bar() -> void;

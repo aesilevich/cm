@@ -1,0 +1,3 @@
+class my_class {
+    func foo(x: int) -> void;
+};

@@ -1,0 +1,14 @@
+template class my_class<type T, var N: int> {
+    injected class my_class;
+    template method foo<type T2>(x: T, y: T2) -> void;
+};
+
+template_instantiation class my_class<int, 10> {
+    template method foo<type T2>(x: int, y: T2) -> void;
+    template_instantiation method foo<float>(x: int, y: float) -> void;
+    method my_class() -> void;
+    method my_class(my_class<int, 10> &) -> void;
+    method my_class(my_class<int, 10> &&) -> void;
+};
+
+func test_func() -> void;

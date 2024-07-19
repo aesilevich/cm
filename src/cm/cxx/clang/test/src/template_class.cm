@@ -1,0 +1,17 @@
+template class my_class<type T, var N: T> {
+    injected class my_class;
+    typedef this_type = my_class;
+    field var: T;
+    method func(x: int) -> void;
+};
+
+template_instantiation class my_class<int, 10> {
+    typedef this_type = my_class<int, 10>;
+    field var: int;
+    method func(x: int) -> void;
+    method my_class() -> void;
+    method my_class(my_class<int, 10> &) -> void;
+    method my_class(my_class<int, 10> &&) -> void;
+};
+
+var x: my_class<int, 10>;

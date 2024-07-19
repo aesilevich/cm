@@ -1,0 +1,10 @@
+template struct nested_t<type T> {
+    injected struct nested_t;
+};
+
+template struct str<type T> {
+    injected struct str;
+    field x: nested_t<T>;
+};
+
+template_dependent_instantiation struct nested_t<T>;

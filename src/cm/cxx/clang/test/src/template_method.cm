@@ -1,0 +1,5 @@
+class my_class {
+    template method foo<type T>(x: T) -> void;
+    template_instantiation method foo<int>(x: int) -> void;
+    method bar() -> void;
+};

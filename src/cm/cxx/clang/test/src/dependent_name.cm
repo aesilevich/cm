@@ -1,0 +1,17 @@
+struct str {
+    typedef nested = int;
+};
+
+template class my_class<type T> {
+    injected class my_class;
+    typedef my_type = dependent_type;
+};
+
+template_instantiation class my_class<str> {
+    typedef my_type = nested;
+    method my_class() -> void;
+    method my_class(my_class<str> &) -> void;
+    method my_class(my_class<str> &&) -> void;
+};
+
+func bar() -> void;

@@ -1,0 +1,3 @@
+class my_class {
+    method foo(x: int) -> void;
+};

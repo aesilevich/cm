@@ -1,0 +1,3 @@
+template func foo<type T, var X: int>(a: double) -> int;
+template_instantiation func foo<float, 200>(a: double) -> int;
+func bar() -> int;
