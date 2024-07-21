@@ -5,6 +5,7 @@
 //
 
 #include "source_file.hpp"
+#include <climits>
 #include <string>
 
 #pragma once

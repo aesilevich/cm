@@ -11,6 +11,7 @@
 
 #include "template_argument.hpp"
 #include "template_name.hpp"
+#include <algorithm>
 
 
 namespace cm {
