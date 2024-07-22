@@ -45,26 +45,14 @@ public:
 
     /// Prints range to output stream
     void print(std::ostream & str, bool full_src_path = true) const {
-        str << " [";
+        str << "[";
         if (full_src_path) {
             str << file()->path();
         } else {
             str << file()->path().filename();
         }
 
-        str << ": ";
-
-        str << "("
-                << range().start().line() << ", "
-                << range().start().column() << ")";
-
-        str << " - ";
-
-        str << "("
-                << range().end().line() << ", "
-                << range().end().column() << ")";
-
-        str << ']';
+        str << ": " << range() << ']';
     }
 
 private:

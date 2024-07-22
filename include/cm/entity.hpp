@@ -14,6 +14,7 @@
 #include <iostream>
 #include <ranges>
 #include <set>
+#include <sstream>
 
 
 namespace cm {
@@ -122,11 +123,25 @@ public:
     /// Prints entity short description to output stream
     virtual void print_desc(std::ostream & str) const = 0;
 
+    /// Returns entity short description
+    std::string desc() const {
+        std::ostringstream str;
+        print_desc(str);
+        return str.str();
+    }
+
     /// Dumps entity to output stream with indent
     virtual void dump(std::ostream & str, const dump_options & opts, unsigned int indent) const {
         print_indent_spaces(str, indent);
         print_desc(str);
         str << std::endl;
+    }
+
+    /// Dumps entity to string
+    std::string dump_to_string(const dump_options & opts = {}, unsigned int indent = 0) const {
+        std::ostringstream str;
+        dump(str, opts, indent);
+        return str.str();
     }
 
     /// Prints indent spaces to output stream

@@ -289,6 +289,7 @@ void ast_printer::print_node_header(const ast_node * node) const {
     if (print_pos_) {
         auto range = node->source_range();
         if (range.is_valid()) {
+            str_ << ' ';
             range.print(str_, print_full_paths_);
         }
     }

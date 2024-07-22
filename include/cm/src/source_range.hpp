@@ -11,6 +11,7 @@
 
 #include "source_position.hpp"
 #include <cassert>
+#include <ostream>
 
 
 namespace cm::src {
@@ -43,10 +44,30 @@ public:
         end_ = pos;
     }
 
+    /// Prints range to output stream
+    void print(std::ostream & str) const {
+        str << "("
+                << start().line() << ", "
+                << start().column() << ")";
+
+        str << " - ";
+
+        str << "("
+                << end().line() << ", "
+                << end().column() << ")";
+    }
+
 private:
     source_position start_;     ///< Start position
     source_position end_;       ///< End position
 };
+
+
+/// Prints source range to output stream
+inline std::ostream & operator<<(std::ostream & str, const source_range & r) {
+    r.print(str);
+    return str;
+}
 
 
 }
