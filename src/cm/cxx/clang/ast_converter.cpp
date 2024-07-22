@@ -12,6 +12,7 @@
 #include "cm/record_kind.hpp"
 #include "cm/record_type.hpp"
 #include "cm/template_instantiation.hpp"
+#include "log.hpp"
 #include <clang/AST/Decl.h>
 #include <clang/AST/DeclBase.h>
 #include <clang/AST/Type.h>
@@ -19,6 +20,7 @@
 #include <clang/AST/DeclTemplate.h>
 #include <clang/Basic/Specifiers.h>
 #include <clang/Basic/SourceManager.h>
+#include <llvm/Support/raw_ostream.h>
 #include <ranges>
 
 
@@ -61,6 +63,15 @@ member_access_spec get_clang_decl_acc_spec(const ::clang::Decl * decl) {
 }
 
 
+/// Dumps declaration to string
+static std::string dump_decl_to_string(const ::clang::Decl * decl) {
+    std::string str;
+    llvm::raw_string_ostream lstr{str};
+    decl->dump(lstr);
+    return str;
+}
+
+
 void ast_converter::convert(const ::clang::ASTContext & ctx) {
     clang_ast_ctx_ = &ctx;
 
@@ -69,7 +80,11 @@ void ast_converter::convert(const ::clang::ASTContext & ctx) {
 
     context_setter csetter{*this, &mdl_, tu_decl};
 
+    CM_CLANG_LOG_TRACE << "converting translation unit:\n" << dump_decl_to_string(tu_decl);
+
     for (auto && decl : tu_decl->decls()) {
+        CM_CLANG_LOG_TRACE << "converting top level declaration:\n" << dump_decl_to_string(decl);
+
         // converting namespaces separately from other declarations
         if (auto ns = ::clang::dyn_cast<::clang::NamespaceDecl>(decl)) {
             convert_ns(ns);
@@ -628,9 +643,7 @@ ast_converter::convert_decltype_type(const ::clang::DecltypeType * clang_type) {
 
 
 void ast_converter::convert_decl(const ::clang::Decl * clang_decl) {
-    // std::cout << "DECL: " << clang_decl << ", canonical = "
-    //           << clang_decl->getCanonicalDecl() << std::endl    ;
-    // clang_decl->dump();
+    CM_CLANG_LOG_TRACE << "converting decl:\n" << dump_decl_to_string(clang_decl);
 
     if (auto * ns = ::clang::dyn_cast<::clang::NamespaceDecl>(clang_decl)) {
         // should not be namespace here
@@ -1258,6 +1271,9 @@ void ast_converter::add_cm_entity(const ::clang::Decl * clang_decl, context_enti
 
 
 record_type * ast_converter::create_new_record(const ::clang::RecordDecl * clang_rec_decl) {
+    CM_CLANG_LOG_DEBUG << "creating new record for clang decl: " << clang_rec_decl;
+    CM_CLANG_LOG_TRACE << "clang record decl dump:\n" << dump_decl_to_string(clang_rec_decl);
+
     // getting record kind
     auto knd = clang_tag_kind_to_record_kind(clang_rec_decl->getTagKind());
 

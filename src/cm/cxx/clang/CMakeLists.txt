@@ -11,7 +11,7 @@ add_library(cm-cxx-clang
            )
 
 target_precompile_headers(cm-cxx-clang PRIVATE pch.hpp)
-target_link_libraries(cm-cxx-clang PUBLIC cm-cxx)
+target_link_libraries(cm-cxx-clang PUBLIC cm-cxx cm-log)
 target_include_directories(cm-cxx-clang PRIVATE ${LLVM_INCLUDE_DIRS} ${CLANG_INCLUDE_DIRS})
 
 set(clang_libraries

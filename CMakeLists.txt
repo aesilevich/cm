@@ -17,7 +17,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Configuring Boost library
 
-set(boost_libraries)
+set(boost_libraries log)
 
 # Boost.Test is required for building tests
 if("${BUILD_TESTING}")
@@ -29,9 +29,9 @@ if("${CM_ENABLE_TOOLS}")
     list(APPEND boost_libraries program_options)
 endif()
 
-if(NOT "${boost_libraries}" STREQUAL "")
-    find_package(Boost 1.64 REQUIRED COMPONENTS ${boost_libraries})
-endif()
+find_package(Boost 1.64 REQUIRED COMPONENTS ${boost_libraries})
 
+
+set(CM_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_subdirectory(src)

@@ -9,6 +9,7 @@
 
 #include "pch.hpp"
 #include "cm/cxx/clang/cmclang.hpp"
+#include "cm/log/log_init.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -91,13 +92,15 @@ void compare_string_with_file(const std::string & str, const fs::path & file_pat
 
 int main(int argc, char * argv[]) {
     try {
-        po::options_description opt_desc;
+        po::options_description opt_desc("Common options");
         opt_desc.add_options()
             ("help", "produce help message and exit")
             ("input-file,i", po::value<fs::path>(), "input source file")
             ("compare", po::value<fs::path>(), "compare dump of parsed code model with file")
             ("dump-builtins", "dump builtins")
             ("dump-locations", "dump definition locations");
+
+        opt_desc.add(cm::log::log_options());
 
         po::positional_options_description pos_opt_desc;
         pos_opt_desc.add("input-file", 1);
@@ -126,6 +129,9 @@ int main(int argc, char * argv[]) {
         if (var_map.count("input-file") == 0) {
             throw std::runtime_error("no input file specified in command line");
         }
+
+        // configuring log
+        cm::log::log_init(var_map);
 
         // creating and parsing code model
         cm::code_model mdl;

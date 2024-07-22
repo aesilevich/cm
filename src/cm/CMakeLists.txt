@@ -19,9 +19,11 @@ add_library(cm
             typedef_type.cpp
            )
 
-target_include_directories(cm PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../../include")
+target_include_directories(cm PUBLIC "${CM_INCLUDE_DIR}")
 target_precompile_headers(cm PRIVATE pch.hpp)
 add_subdirectory(test)
+
+add_subdirectory(log)
 
 if("${CM_ENABLE_SRC}")
     add_subdirectory(src)
