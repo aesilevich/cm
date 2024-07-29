@@ -32,10 +32,9 @@ class template_: public templated_entity,
                  virtual public named_context_entity,
                  public template_name {
 public:
-    /// Constructs template from pack of template parameters
-    template <typename ... Params>
-    template_(context * ctx, const std::string & nm, Params && ... params):
-        templated_entity{ctx, std::forward<Params>(params)...},
+    /// Constructs template with not parameters
+    template_(context * ctx, const std::string & nm):
+        templated_entity{ctx},
         named_context_entity{ctx, nm} {}
 
     /// Returns template name

@@ -20,6 +20,10 @@ class mock_context: public context {
 public:
     mock_context(): context(nullptr), context_entity(nullptr) {}
 
+    access_level default_access_level() const override {
+        return access_level::public_;
+    }
+
     void print_desc(std::ostream & str) const override {
         str << "mock_context";
     }

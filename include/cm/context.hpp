@@ -46,7 +46,7 @@ public:
     };
 
 protected:
-    /// Constructs context_entity context with specified optional parent context
+    /// Constructs context with specified optional parent context
     context(context * p):
         context_entity(p) {}
 
@@ -56,6 +56,9 @@ public:
 
     /// Returns true if context_entity context is root (has no parent)
     bool is_root() const { return ctx() == nullptr; }
+
+    /// Returns default access level for this context
+    virtual access_level default_access_level() const = 0;
 
 
     //////////////////////////////////////////////////////////////////////
@@ -209,7 +212,7 @@ public:
     auto records();
 
     /// Creates anonymous record type in context
-    virtual record_type * create_record(record_kind knd = record_kind::struct_);
+    record_type * create_record(record_kind knd = record_kind::struct_);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -230,8 +233,8 @@ public:
     const named_record_type * find_named_record(const std::string & name) const;
 
     /// Creates named record in context
-    virtual named_record_type * create_named_record(const std::string & name,
-                                                    record_kind knd = record_kind::struct_);
+    named_record_type * create_named_record(const std::string & name,
+                                            record_kind knd = record_kind::struct_);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -250,7 +253,7 @@ public:
     typedef_type * find_typedef(const std::string & name);
 
     /// Creates nested typedef type in this context
-    virtual typedef_type * create_typedef(const std::string & name, const qual_type & base);
+    typedef_type * create_typedef(const std::string & name, const qual_type & base);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -269,7 +272,7 @@ public:
     enum_type * find_enum(const std::string & name);
 
     /// Creates enum in context
-    virtual enum_type * create_enum(const std::string & name, builtin_type * base);
+    enum_type * create_enum(const std::string & name, builtin_type * base);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -314,7 +317,7 @@ public:
     named_function * find_function(const std::string & nm);
 
     /// Creates function with specified name
-    virtual named_function * create_function(const std::string & name);
+    named_function * create_function(const std::string & name);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -353,7 +356,7 @@ public:
     template_function * find_template_function(const std::string & name);
 
     /// Creates template function in this context
-    virtual template_function * create_template_function(const std::string & name);
+    template_function * create_template_function(const std::string & name);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -396,7 +399,7 @@ public:
     void dump_entities(std::ostream & str, const dump_options & opts, unsigned int indent) const;
 
 protected:
-    /// Creates entity in context with custom context type and adds it into list of entities
+    /// Creates entity in context with custom context type and dds it into list of entities
     template <typename Entity, typename Context, typename ... Args>
     Entity * create_entity_impl(Context * ctx, Args && ... args) {
         auto ent = std::make_unique<Entity>(ctx, std::forward<Args>(args)...);

@@ -159,7 +159,7 @@ BOOST_AUTO_TEST_CASE(parse_class_static_var) {
     auto var = *std::ranges::begin(rtype_vars);
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->name(), "x");
-    BOOST_CHECK(rtype->access_lev(var) == access_level::protected_);
+    BOOST_CHECK(var->access_lev() == access_level::protected_);
 }
 
 
@@ -183,7 +183,7 @@ BOOST_AUTO_TEST_CASE(parse_class_var) {
     auto var = *std::ranges::begin(rtype_ivars);
     BOOST_REQUIRE(var);
     BOOST_CHECK_EQUAL(var->name(), "x");
-    BOOST_CHECK(rtype->access_lev(var) == access_level::protected_);  
+    BOOST_CHECK(var->access_lev() == access_level::protected_);  
 }
 
 
@@ -204,7 +204,7 @@ BOOST_AUTO_TEST_CASE(parse_class_static_func) {
 
     auto dfunc = dynamic_cast<named_function*>(rtype->find_named_entity("foo"));
     BOOST_CHECK_EQUAL(dfunc->name(), "foo");
-    BOOST_CHECK(rtype->access_lev(dfunc) == access_level::private_);  
+    BOOST_CHECK(dfunc->access_lev() == access_level::private_);  
 
     auto fn_type = mdl.get_or_create_func_type(dfunc);
     BOOST_REQUIRE(fn_type);
@@ -241,7 +241,7 @@ BOOST_AUTO_TEST_CASE(parse_class_func) {
     auto func = dynamic_cast<named_function*>(rtype->find_named_entity("foo"));
     BOOST_REQUIRE(func);
     BOOST_CHECK_EQUAL(func->name(), "foo");
-    BOOST_CHECK(rtype->access_lev(func) == access_level::private_);  
+    BOOST_CHECK(func->access_lev() == access_level::private_);  
 
     auto fn_type = mdl.get_or_create_func_type(func);
     BOOST_REQUIRE(fn_type);

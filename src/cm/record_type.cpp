@@ -23,15 +23,15 @@ field * record::create_field(const std::string & name,
             "static variable with specified name already exists");
 
     auto ivar = create_named_entity_impl<field>(this, name, type, bit_size);
-    add_access_level(ivar, acc);
+    ivar->set_access_lev(acc);
     return ivar;
 }
 
 
-named_method * record::create_method(const std::string & name, access_level spec) {
+named_method * record::create_method(const std::string & name, access_level acc) {
     // TODO: check existing overload?
     auto func = create_named_entity_impl<named_method>(this, name);
-    add_access_level(func, spec);
+    func->set_access_lev(acc);
     return func;
 }
 

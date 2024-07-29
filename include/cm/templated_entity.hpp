@@ -93,16 +93,9 @@ using template_parameter_up = std::unique_ptr<template_parameter>;
 /// parameters: templates itself or partial template specializations.
 class templated_entity: virtual public context {
 public:
-    /// Constructs template
+    /// Constructs templated entity with no parameters
     templated_entity(context * ctx):
         context{ctx} {}
-
-    /// Constructs template from pack of template parameters
-    template <typename ... Params>
-    templated_entity(context * ctx, Params && ... params):
-    templated_entity{ctx} {
-        add_params(std::forward<Params>(params)...);
-    }
 
     /// Default virtual destructor
     virtual ~templated_entity() = default;
@@ -173,6 +166,11 @@ public:
         str << '>';
     }
 
+    /// Adds template parameters
+    void add_params(auto && ... params) {
+        add_params_impl(std::forward<decltype(params)>(params)...);
+    }
+
 private:
     // /// Adds template parameter
     // void add_param(template_parameter_up && par) {
@@ -182,18 +180,18 @@ private:
     // Helper functions for adding template parameters from constructor with
     // variadic arguments
 
-    void add_params() {}
+    void add_params_impl() {}
 
     template <typename ... Params>
-    void add_params(const std::string & par, Params && ... params) {
+    void add_params_impl(const std::string & par, Params && ... params) {
         add_type_template_param(par);
-        add_params(std::forward<Params>(params)...);
+        add_params_impl(std::forward<Params>(params)...);
     }
 
     template <typename ... Params>
-    void add_params(const std::tuple<std::string, type_t*> & par, Params && ... params) {
+    void add_params_impl(const std::tuple<std::string, type_t*> & par, Params && ... params) {
         add_value_template_param(std::get<0>(par), std::get<1>(par));
-        add_params(std::forward<Params>(params)...);
+        add_params_impl(std::forward<Params>(params)...);
     }
 
 

@@ -37,6 +37,11 @@ public:
     name_{nm} {
     }
 
+    /// Returns default access level for this context
+    access_level default_access_level() const override {
+        return access_level::public_;
+    }
+
     /// Creates nested namespace with specified name. Namespace must not exist.
     namespace_ * create_namespace(const std::string & name);
 

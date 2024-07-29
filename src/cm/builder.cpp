@@ -34,7 +34,7 @@ void record_builder_base::tdef_impl(const std::string & name,
 
     type_t * td = nullptr;
     if (is_new_) {
-        td = rec_->create_typedef(name, type, cm::access_level::public_);
+        td = rec_->create_typedef(name, type);
     } else {
         td = dynamic_cast<type_t*>(rec_->find_named_entity(name));
         assert(td && "can't find typedef in existing record");
@@ -105,10 +105,10 @@ record_builder_base::get_or_create_rec(const std::string & nm,
 
         if (!nm.empty()) {
             // nested record with same name should not exist at this point
-            nest_rec = rec_->create_named_record(nm, knd, cm::access_level::public_);
+            nest_rec = rec_->create_named_record(nm, knd);
             bldr().add_new_rec_type(nest_rec);
         } else {
-            nest_rec = rec_->create_record(knd, cm::access_level::public_);
+            nest_rec = rec_->create_record(knd);
             bldr().add_new_rec_type(nest_rec);
         }
 

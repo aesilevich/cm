@@ -166,10 +166,8 @@ context{templ->ctx()} {
 
 
 inline template_method *
-record::create_template_method(const std::string & name, access_level acc) {
-    auto func = create_named_entity_impl<template_method>(this, name);
-    add_access_level(func, acc);
-    return func;
+record::create_template_method(const std::string & name) {
+    return create_named_entity_impl<template_method>(this, name);
 }
 
 

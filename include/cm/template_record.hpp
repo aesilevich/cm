@@ -162,10 +162,11 @@ public:
                              record_kind knd,
                              Params && ... params):
     record{ctx, knd},
-    template_{ctx, nm, std::forward<Params>(params)...},
+    template_{ctx, nm},
     named_context_entity{ctx, nm},
     context{ctx},
     context_entity{ctx} {
+        this->add_params(std::forward<Params>(params)...);
         init();
     }
 

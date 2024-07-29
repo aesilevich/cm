@@ -263,18 +263,6 @@ private:
     find_type_template_parameter_decl(const ::clang::Decl * curr_decl,
                                       const ::clang::TemplateTypeParmType * type);
 
-    /// Executes one of passed functors depending on type of current decl context
-    template <typename NsBlock, typename RecBlock>
-    auto exec_ns_or_rec(NsBlock && ns_block, RecBlock && rec_block) {
-        if (auto * rec_dctx = dynamic_cast<record*>(ctx_)) {
-            return rec_block(rec_dctx);
-        } else {
-            auto * ns_dctx = dynamic_cast<namespace_*>(ctx_);
-            assert(ns_dctx && "context must be record or namespace");
-            return ns_block(ns_dctx);
-        }
-    }
-
 
     code_model & mdl_;      ///< Reference to code model
 

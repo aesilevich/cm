@@ -106,6 +106,11 @@ public:
         }
     }
 
+    /// Returns default access level for this context
+    access_level default_access_level() const override {
+        return access_level::private_;
+    }
+
     /// Returns function return type
     qual_type ret_type() {
         return ret_type_;

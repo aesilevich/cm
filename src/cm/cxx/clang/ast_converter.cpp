@@ -731,12 +731,8 @@ typedef_type * ast_converter::convert_typedef(const ::clang::TypedefNameDecl * c
 
     // creating typedef type in namespace or record
     auto nm = clang_typedef_decl->getNameAsString();
-    typedef_type * td_type = exec_ns_or_rec([nm, base_type, this](auto && ns) {
-        return ns->create_typedef(nm, base_type);
-    }, [nm, base_type, clang_typedef_decl, this](auto && rec) {
-        return rec->create_typedef(nm, base_type, get_clang_decl_acc_spec(clang_typedef_decl));
-    });
-
+    auto td_type = ctx_->create_typedef(nm, base_type);
+    td_type->set_access_lev(get_clang_decl_acc_spec(clang_typedef_decl));
     td_type->set_loc(convert_loc(clang_typedef_decl->getCanonicalDecl()->getLocation()));
 
     add_cm_entity(clang_typedef_decl, td_type);
@@ -755,20 +751,19 @@ function * ast_converter::convert_function(const ::clang::FunctionDecl * clang_f
 
     // creating new function
     auto nm = clang_func_decl->getNameAsString();
-    func = exec_ns_or_rec([nm](auto && ns) {
-        return ns->create_function(nm);
-    }, [nm, clang_func_decl](auto && rec) {
-        auto acc = get_clang_decl_acc_spec(clang_func_decl);
-        auto method_decl = ::clang::dyn_cast<::clang::CXXMethodDecl>(clang_func_decl);
-        if (!method_decl || method_decl->isStatic()) {
-            // static function
-            return rec->create_function(nm, acc);
-        } else {
-            // intstance function
-            return static_cast<named_function*>(rec->create_method(nm, acc));
-        }
-    });
+    if (auto method_decl = ::clang::dyn_cast<::clang::CXXMethodDecl>(clang_func_decl);
+       method_decl != nullptr && !method_decl->isStatic())
+    {
+        // context must be a record
+        auto rec = dynamic_cast<record*>(ctx_);
+        assert(rec && "context must be a record for method declaration");
 
+        func = rec->create_method(nm);
+    } else {
+        func = ctx_->create_function(nm);
+    }
+
+    func->set_access_lev(get_clang_decl_acc_spec(clang_func_decl));
     func->set_loc(convert_loc(clang_func_decl->getCanonicalDecl()->getLocation()));
 
     // adding function entity mapping
@@ -797,13 +792,8 @@ variable * ast_converter::convert_variable(const ::clang::VarDecl * clang_var_de
 
     // creating new variable
     auto nm = clang_var_decl->getNameAsString();
-    var = exec_ns_or_rec([nm, var_type](auto && ns) {
-        // variable in namespace
-        return ns->create_var(nm, var_type);
-    }, [nm, var_type, clang_var_decl](auto && rec) -> variable* {
-        // static variable in record
-        return rec->create_var(nm, var_type, get_clang_decl_acc_spec(clang_var_decl));
-    });
+    var = ctx_->create_var(nm, var_type);
+    var->set_access_lev(get_clang_decl_acc_spec(clang_var_decl));
 
     add_cm_entity(clang_var_decl, var);
     return var;
@@ -997,19 +987,19 @@ ast_converter::convert_template_function(const ::clang::FunctionTemplateDecl * c
 
     // creating new function
     auto nm = clang_func_decl->getNameAsString();
-    func = exec_ns_or_rec([nm](auto && ns) {
-        return ns->create_template_function(nm);
-    }, [nm, clang_func_decl](auto && rec) {
-        auto acc = get_clang_decl_acc_spec(clang_func_decl);
-        auto method_decl = ::clang::dyn_cast<::clang::CXXMethodDecl>(clang_func_decl);
-        if (!method_decl || method_decl->isStatic()) {
-            // static function
-            return rec->create_template_function(nm, acc);
-        } else {
-            // intstance function
-            return static_cast<template_function*>(rec->create_template_method(nm, acc));
-        }
-    });
+    if (auto method_decl = ::clang::dyn_cast<::clang::CXXMethodDecl>(clang_func_decl);
+        method_decl != nullptr && !method_decl->isStatic())
+    {
+        // context must be a record
+        auto rec = dynamic_cast<record*>(ctx_);
+        assert(rec && "context must be a record for method declaration");
+
+        func = rec->create_template_method(nm);
+    } else {
+        func = ctx_->create_template_function(nm);
+    }
+
+    func->set_access_lev(get_clang_decl_acc_spec(clang_func_decl));
 
     // adding entity before converting template parameters, return type and
     // function parameters
@@ -1280,20 +1270,14 @@ record_type * ast_converter::create_new_record(const ::clang::RecordDecl * clang
     // creating new record
     record_type * rec = nullptr;
     if (clang_rec_decl->getName().empty()) {
-        rec = exec_ns_or_rec([knd, this](auto && ns) {
-            return ns->create_record(knd);
-        }, [knd, clang_rec_decl, this](auto && rec) {
-            return rec->create_record(knd, get_clang_decl_acc_spec(clang_rec_decl));
-        });
+        rec = ctx_->create_record(knd);
+        rec->set_access_lev(get_clang_decl_acc_spec(clang_rec_decl));
     } else {
         auto nm = clang_rec_decl->getNameAsString();
         rec = ctx_->find_named_entity<named_record_type>(nm);
         if (!rec) {
-            rec = exec_ns_or_rec([nm, knd, this](auto && ns) {
-                return ns->create_named_record(nm, knd);
-            }, [nm, knd, clang_rec_decl, this](auto && rec) {
-                return rec->create_named_record(nm, knd, get_clang_decl_acc_spec(clang_rec_decl));
-            });
+            rec = ctx_->create_named_record(nm, knd);
+            rec->set_access_lev(get_clang_decl_acc_spec(clang_rec_decl));
         }
     }
 
