@@ -27,8 +27,8 @@ class named_record_type;
 class template_method;
 
 
-/// Member access specifier type
-enum class member_access_spec {
+/// Member access level type
+enum class access_level {
     public_,
     protected_,
     private_
@@ -50,7 +50,7 @@ public:
 class field: public variable, public member {
 public:
     /// Constructor, makes isntance variable with specified name,
-    /// type and access specifier
+    /// type and access level
     inline field(record * rec,
                              const std::string & nm,
                              const qual_type & tp,
@@ -103,7 +103,7 @@ public:
 class static_record_function: virtual public function, public member {
 public:
     /// Constructors static record member function with specified
-    /// name, type and access specifier
+    /// name, type and access level
     inline static_record_function(record * rec,
                                   const std::string & nm,
                                   function_type * tp);
@@ -131,24 +131,24 @@ public:
         kind_ = knd;
     }
 
-    /// Returns default access specifier for record
-    member_access_spec default_access_spec() const {
+    /// Returns default access level for record
+    access_level default_access_level() const {
         if (kind() == record_kind::class_) {
-            return member_access_spec::private_;
+            return access_level::private_;
         } else {
-            return member_access_spec::public_;
+            return access_level::public_;
         }
     }
 
-    /// Returns access specifier for a member context_entity. Entity passed to this
+    /// Returns access level for a member context_entity. Entity passed to this
     /// function must exists in record.
-    member_access_spec access_spec(const context_entity * ent) const {
-        auto it = access_specs_.find(ent);
-        if (it != access_specs_.end()) {
+    access_level access_lev(const context_entity * ent) const {
+        auto it = access_levs_.find(ent);
+        if (it != access_levs_.end()) {
             return it->second;
         }
 
-        return default_access_spec();
+        return default_access_level();
     }
 
     /// Creates unnamed entity in record context
@@ -177,29 +177,29 @@ public:
     /// Creates typedef in record
     auto create_typedef(const std::string & name,
                         const qual_type & base,
-                        member_access_spec acc = member_access_spec::public_) {
+                        access_level acc = access_level::public_) {
         auto td = context::create_typedef(name, base);
-        add_access_spec(td, acc);
+        add_access_level(td, acc);
         return td;
     }
 
     /// Creates enum in record
     enum_type * create_enum(const std::string & name,
                             builtin_type * base,
-                            member_access_spec acc = member_access_spec::public_) {
+                            access_level acc = access_level::public_) {
         auto en = context::create_enum(name, base);
-        add_access_spec(en, acc);
+        add_access_level(en, acc);
         return en;
     }
 
     /// Creates record type in record
     inline record_type * create_record(record_kind knd = record_kind::struct_,
-                                    member_access_spec acc = member_access_spec::public_);
+                                    access_level acc = access_level::public_);
 
     /// Creates named record in record
     inline named_record_type * create_named_record(const std::string & name,
                                                 record_kind knd = record_kind::struct_,
-                                                member_access_spec acc = member_access_spec::public_);
+                                                access_level acc = access_level::public_);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -222,12 +222,12 @@ public:
     }
 
     /// Adds base class into record
-    void add_base(type_t * base, member_access_spec acc = member_access_spec::private_) {
+    void add_base(type_t * base, access_level acc = access_level::private_) {
         // checking that record is not in vector of base classes
         assert(std::ranges::find(bases_, base) == std::ranges::end(bases_) &&
                "record is already an base class");
 
-        // TODO: implement access specifiers for base types
+        // TODO: implement access levels for base types
 
         base->add_use(this);
         bases_.push_back(base);
@@ -269,7 +269,7 @@ public:
     /// Creates field with specified name and type
     field * create_field(const std::string & name,
                          const qual_type & type,
-                         member_access_spec acc = member_access_spec::public_,
+                         access_level acc = access_level::public_,
                          unsigned int bit_size = 0);
 
 
@@ -289,43 +289,43 @@ public:
     /// Creates static variable with specified name and type in record
     static_record_variable * create_var(const std::string & name,
                                         const qual_type & type,
-                                        member_access_spec acc_spec) {
+                                        access_level acc_spec) {
         auto var = create_named_entity_impl<static_record_variable>(this, name, type);
-        add_access_spec(var, acc_spec);
+        add_access_level(var, acc_spec);
         return var;
     }
 
     /// Creates static public variable with specified name and type in record
     static_record_variable * create_var(const std::string & name, const qual_type & type) override {
-        return create_var(name, type, member_access_spec::public_);
+        return create_var(name, type, access_level::public_);
     }
 
 
     //////////////////////////////////////////////////////////////////////
     // Static functions
 
-    /// Creates static function with specified name and access specifier
-    named_function * create_function(const std::string & name, member_access_spec acc) {
+    /// Creates static function with specified name and access level
+    named_function * create_function(const std::string & name, access_level acc) {
         auto fn = context::create_function(name);
-        add_access_spec(fn, acc);
+        add_access_level(fn, acc);
         return fn;
     }
 
-    /// Creates static template function with specified name and access specifier
-    template_function * create_template_function(const std::string & name, member_access_spec acc) {
+    /// Creates static template function with specified name and access level
+    template_function * create_template_function(const std::string & name, access_level acc) {
         auto fn = context::create_template_function(name);
-        add_access_spec(fn, acc);
+        add_access_level(fn, acc);
         return fn;
     }
 
     /// Creates static public function with specified name
     named_function * create_function(const std::string & name) override {
-        return create_function(name, member_access_spec::public_);
+        return create_function(name, access_level::public_);
     }
 
     /// Creates static public template function with specified name
     template_function * create_template_function(const std::string & name) override {
-        return create_template_function(name, member_access_spec::public_);
+        return create_template_function(name, access_level::public_);
     }
 
 
@@ -334,12 +334,12 @@ public:
 
     /// Creates method and adds it to the end of the list of declarations
     named_method * create_method(const std::string & name,
-                                 member_access_spec spec = member_access_spec::public_);
+                                 access_level spec = access_level::public_);
 
     /// Creates template method and adds it to the list of record declarations
     inline template_method *
     create_template_method(const std::string & name,
-                           member_access_spec spec = member_access_spec::public_);
+                           access_level spec = access_level::public_);
 
 
     //////////////////////////////////////////////////////////////////////
@@ -355,16 +355,16 @@ public:
 
 
 private:
-    /// Adds access specifier for member context_entity or base class. Entity passed to this
-    /// function must not be in map of access specifiers.
-    void add_access_spec(const context_entity * ent, member_access_spec acc) {
-        auto [it, added] = access_specs_.emplace(ent, acc);
+    /// Adds access level for member context_entity or base class. Entity passed to this
+    /// function must not be in map of access levels.
+    void add_access_level(const context_entity * ent, access_level acc) {
+        auto [it, added] = access_levs_.emplace(ent, acc);
         assert(added && "access specified already exists for context_entity");
     }
 
-    /// Removes access specifier for member context_entity or base class if it exists.
+    /// Removes access level for member context_entity or base class if it exists.
     void remove_access_spec(const context_entity * ent) {
-        access_specs_.erase(ent);
+        access_levs_.erase(ent);
     }
 
     /// Record kind
@@ -373,8 +373,8 @@ private:
     /// Vector of base types (non necessary records, may be typedef or template instantiation)
     std::vector<type_t*> bases_;
 
-    /// Map between entities and access specifiers
-    std::map<const context_entity*, member_access_spec> access_specs_;
+    /// Map between entities and access levels
+    std::map<const context_entity*, access_level> access_levs_;
 };
 
 
@@ -486,18 +486,18 @@ inline static_record_variable::static_record_variable(record * rec,
 variable{rec, nm, tp}, context_entity{rec}, single_type_use{tp} {}
 
 
-inline record_type * record::create_record(record_kind knd, member_access_spec acc) {
+inline record_type * record::create_record(record_kind knd, access_level acc) {
     auto rec = context::create_record(knd);
-    add_access_spec(rec, acc);
+    add_access_level(rec, acc);
     return rec;
 }
 
 
 inline named_record_type * record::create_named_record(const std::string & name,
                                                          record_kind knd,
-                                                         member_access_spec acc) {
+                                                         access_level acc) {
     auto rec = context::create_named_record(name, knd);
-    add_access_spec(rec, acc);
+    add_access_level(rec, acc);
     return rec;
 }
 

@@ -46,19 +46,19 @@ record_kind clang_tag_kind_to_record_kind(::clang::TagTypeKind clang_knd) {
 }
 
 
-/// Returns access specifier for declaration
-member_access_spec get_clang_decl_acc_spec(const ::clang::Decl * decl) {
+/// Returns access level for declaration
+access_level get_clang_decl_acc_spec(const ::clang::Decl * decl) {
     switch (decl->getAccess()) {
     case ::clang::AS_none:
     case ::clang::AS_public:
-        return member_access_spec::public_;
+        return access_level::public_;
     case ::clang::AS_protected:
-        return member_access_spec::protected_;
+        return access_level::protected_;
     case ::clang::AS_private:
-        return member_access_spec::private_;
+        return access_level::private_;
     default:
-        assert(false && "unknown clang access specifier");
-        return member_access_spec::public_;
+        assert(false && "unknown clang access level");
+        return access_level::public_;
     }
 }
 
@@ -1119,7 +1119,7 @@ void ast_converter::fill_record_contents(cm::record * rec,
         }
 
         if (auto acc_decl = ::clang::dyn_cast<::clang::AccessSpecDecl>(decl)) {
-            // doing nothing for access specifiers
+            // doing nothing for access levels
         } else if (auto fld_decl = ::clang::dyn_cast<::clang::FieldDecl>(decl)) {
             // field
             convert_field(rec, fld_decl);

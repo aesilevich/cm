@@ -102,7 +102,7 @@ protected:
     /// Instance variable build implementation
     void ivar_impl(const std::string & name,
                    const qual_type & type,
-                   member_access_spec acc = member_access_spec::public_,
+                   access_level acc = access_level::public_,
                    unsigned int bit_size = 0,
                    const source_location & loc = {});
 
@@ -110,7 +110,7 @@ protected:
     /// TODO: replace function type with parameters
     void ifunc_impl(const std::string & name,
                     function_type * type,
-                    member_access_spec acc = member_access_spec::public_);
+                    access_level acc = access_level::public_);
 
     /// Static function build implementation
     /// TODO: replace function type with parameters
@@ -421,7 +421,7 @@ public:
     /// Creates field in record
     record_builder<Parent> ivar(const std::string & name,
                                 const qual_type & type,
-                                member_access_spec acc = member_access_spec::public_,
+                                access_level acc = access_level::public_,
                                 unsigned int bit_size = 0,
                                 const source_location & loc = {}) {
         ivar_impl(name, type, acc, bit_size, loc);
@@ -431,7 +431,7 @@ public:
     /// Creates method in record
     record_builder<Parent> ifunc(const std::string & name,
                                  function_type * type,
-                                 member_access_spec acc = member_access_spec::public_) {
+                                 access_level acc = access_level::public_) {
         ifunc_impl(name, type, acc);
         return *this;
     }

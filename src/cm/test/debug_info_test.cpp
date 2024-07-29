@@ -29,8 +29,8 @@ BOOST_FIXTURE_TEST_SUITE(debug_info_test, debug_info_test_fixture)
 /// Tests default layout of fields of record type
 BOOST_AUTO_TEST_CASE(default_layout) {
     auto rec = cm.create_record();
-    rec->create_field("var1", cm.bt_int(), member_access_spec::public_);
-    rec->create_field("var2", cm.bt_int(), member_access_spec::public_);
+    rec->create_field("var1", cm.bt_int(), access_level::public_);
+    rec->create_field("var2", cm.bt_int(), access_level::public_);
     dbg.make_def_rec_layout(rec);
 
     BOOST_CHECK_EQUAL(dbg.type_size(rec), 8);
@@ -52,8 +52,8 @@ BOOST_AUTO_TEST_CASE(default_recursive_layout) {
     auto td = cm.create_typedef("my_td", fld_type);
 
     auto rec = cm.create_record();
-    rec->create_field("var1", td, member_access_spec::public_);
-    rec->create_field("var2", cm.bt_int(), member_access_spec::public_);
+    rec->create_field("var1", td, access_level::public_);
+    rec->create_field("var2", cm.bt_int(), access_level::public_);
     dbg.make_def_rec_layout(rec);
 
     BOOST_CHECK_EQUAL(dbg.type_size(rec), 8);
@@ -71,18 +71,18 @@ BOOST_AUTO_TEST_CASE(default_recursive_layout) {
 /// Tests default layout of base classes of record type
 BOOST_AUTO_TEST_CASE(default_layout_bases) {
     auto base1 = cm.create_named_record("base1");
-    base1->create_field("var1", cm.bt_int(), member_access_spec::public_);
-    base1->create_field("var2", cm.bt_int(), member_access_spec::public_);
+    base1->create_field("var1", cm.bt_int(), access_level::public_);
+    base1->create_field("var2", cm.bt_int(), access_level::public_);
     dbg.make_def_rec_layout(base1);
 
     auto base2 = cm.create_named_record("base2");
-    base2->create_field("varx", cm.bt_float(), member_access_spec::private_);
+    base2->create_field("varx", cm.bt_float(), access_level::private_);
     dbg.make_def_rec_layout(base2);
 
     auto rec = cm.create_record();
     rec->add_base(base1);
     rec->add_base(base2);
-    rec->create_field("xxx", cm.bt_double(), member_access_spec::protected_);
+    rec->create_field("xxx", cm.bt_double(), access_level::protected_);
 
     dbg.make_def_rec_layout(rec);
 
@@ -105,16 +105,16 @@ BOOST_AUTO_TEST_CASE(default_layout_bases) {
 /// Tests recursive default layout of base classes of record type
 BOOST_AUTO_TEST_CASE(default_recursive_layout_bases) {
     auto base1 = cm.create_named_record("base1");
-    base1->create_field("var1", cm.bt_int(), member_access_spec::public_);
-    base1->create_field("var2", cm.bt_int(), member_access_spec::public_);
+    base1->create_field("var1", cm.bt_int(), access_level::public_);
+    base1->create_field("var2", cm.bt_int(), access_level::public_);
 
     auto base2 = cm.create_named_record("base2");
-    base2->create_field("varx", cm.bt_float(), member_access_spec::private_);
+    base2->create_field("varx", cm.bt_float(), access_level::private_);
 
     auto rec = cm.create_record();
     rec->add_base(base1);
     rec->add_base(base2);
-    rec->create_field("xxx", cm.bt_double(), member_access_spec::protected_);
+    rec->create_field("xxx", cm.bt_double(), access_level::protected_);
 
     dbg.make_def_rec_layout(rec);
 

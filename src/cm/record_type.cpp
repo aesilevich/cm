@@ -16,22 +16,22 @@ namespace cm {
 
 field * record::create_field(const std::string & name,
                                                  const qual_type & type,
-                                                 member_access_spec acc,
+                                                 access_level acc,
                                                  unsigned int bit_size) {
 
     assert(find_var(name) == nullptr &&
             "static variable with specified name already exists");
 
     auto ivar = create_named_entity_impl<field>(this, name, type, bit_size);
-    add_access_spec(ivar, acc);
+    add_access_level(ivar, acc);
     return ivar;
 }
 
 
-named_method * record::create_method(const std::string & name, member_access_spec spec) {
+named_method * record::create_method(const std::string & name, access_level spec) {
     // TODO: check existing overload?
     auto func = create_named_entity_impl<named_method>(this, name);
-    add_access_spec(func, spec);
+    add_access_level(func, spec);
     return func;
 }
 

@@ -248,7 +248,7 @@ BOOST_AUTO_TEST_CASE(create_templ_inst_recursive) {
 BOOST_AUTO_TEST_CASE(create_rec_ptr_recursive) {
     auto rec = cm.create_named_record("rec");
     auto ptr = cm.get_or_create_ptr_type(rec);
-    rec->create_field("fld", ptr, member_access_spec::public_);
+    rec->create_field("fld", ptr, access_level::public_);
 }
 
 

@@ -432,7 +432,7 @@ BOOST_AUTO_TEST_CASE(incremental) {
 BOOST_AUTO_TEST_CASE(record_bitfield) {
     auto res = b
         .record("rec")
-            .ivar("x", cm.bt_int(), member_access_spec::public_, 3)
+            .ivar("x", cm.bt_int(), access_level::public_, 3)
         .end()
     .build();
 
