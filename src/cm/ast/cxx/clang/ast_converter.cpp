@@ -34,9 +34,9 @@ void ast_converter::convert() {
     auto & src_mngr = clang_ast_ctx_->getSourceManager();
     source_file * src = nullptr;
     if (auto main_entry = src_mngr.getFileEntryRefForID(src_mngr.getMainFileID())) {
-        src = scm_.get_or_create_source(main_entry->getName().str());
+        src = cm_ast_.get_or_create_source(main_entry->getName().str());
     } else {
-        src = scm_.get_or_create_source("<unknown>");
+        src = cm_ast_.get_or_create_source("<unknown>");
     }
 
     src->create_decl_ctx();
@@ -49,7 +49,7 @@ void ast_converter::convert() {
     cm_conv_.convert();
 
     // setting source code model as current declaration context
-    //ctx_ = &scm_.f;
+    //ctx_ = &cm_ast_.f;
 
     // processing source code
     this->TraverseAST(*clang_ast_ctx_);
@@ -66,9 +66,9 @@ void ast_converter::convert() {
     // for (auto && decl : tu_decl->decls()) {
     //     // converting namespaces separately from other declarations
     //     if (auto ns = ::clang::dyn_cast<::clang::NamespaceDecl>(decl)) {
-    //         convert_ns(&scm_, ns);
+    //         convert_ns(&cm_ast_, ns);
     //     } else {
-    //         convert_decl(&scm_, decl);
+    //         convert_decl(&cm_ast_, decl);
     //     }
     // }
 }
@@ -1216,12 +1216,12 @@ source_file_range ast_converter::convert_source_range(const ::clang::SourceLocat
     // converting start location
     auto start_ploc = clang_ast_ctx_->getSourceManager().getPresumedLoc(start);
     source_position start_pos{start_ploc.getLine(), start_ploc.getColumn()};
-    auto start_file = scm_.code_mdl().source(start_ploc.getFilename());
+    auto start_file = cm_ast_.code_mdl().source(start_ploc.getFilename());
 
     // converting end location
     auto end_ploc = clang_ast_ctx_->getSourceManager().getPresumedLoc(end);
     source_position end_pos{end_ploc.getLine(), end_ploc.getColumn()};
-    auto end_file = scm_.code_mdl().source(end_ploc.getFilename());
+    auto end_file = cm_ast_.code_mdl().source(end_ploc.getFilename());
 
     // TODO: support this case
     assert(start_file == end_file && "AST nodes splitted between source files are not supported");
