@@ -6,7 +6,7 @@ project(cm)
 
 include(CTest)
 
-option(CM_ENABLE_SRC "Enable source code model" ON)
+option(CM_ENABLE_AST "Enable source code AST model" ON)
 option(CM_ENABLE_TOOLS "Enable code model command line tools" ON)
 
 option(CM_ENABLE_CXX "Enable C++ model" ON)

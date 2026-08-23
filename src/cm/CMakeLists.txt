@@ -25,8 +25,8 @@ add_subdirectory(test)
 
 add_subdirectory(log)
 
-if("${CM_ENABLE_SRC}")
-    add_subdirectory(src)
+if("${CM_ENABLE_AST}")
+    add_subdirectory(ast)
 endif()
 
 if("${CM_ENABLE_CXX}")
