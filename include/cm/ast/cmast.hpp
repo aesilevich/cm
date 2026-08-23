@@ -12,4 +12,4 @@
 #include "../cm.hpp"
 #include "ast.hpp"
 #include "ast_printer.hpp"
-#include "source_code_model.hpp"
+#include "ast_model.hpp"

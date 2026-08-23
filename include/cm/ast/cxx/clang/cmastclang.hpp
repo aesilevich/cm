@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "../../source_code_model.hpp"
+#include "../../ast_model.hpp"
 #include <filesystem>
 #include <vector>
 
@@ -18,7 +18,7 @@ namespace cm::ast::cxx::clang {
 
 
 /// Parses code model from source file
-void parse_source_file(source_code_model & mdl,
+void parse_source_file(ast_model & mdl,
                        const std::filesystem::path & path,
                        const std::vector<std::string> & args);
 

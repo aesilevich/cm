@@ -14,7 +14,7 @@
 
 namespace cm::ast {
 
-class source_code_model;
+class ast_model;
 
 
 /// AST printer
@@ -30,7 +30,7 @@ public:
     void set_print_full_paths(bool val) { print_full_paths_ = val; }
 
     /// Prints source code model to output stream
-    void print(const source_code_model & mdl_);
+    void print(const ast_model & mdl_);
 
     /// Traverses through identifier AST node
     bool traverse_identifier(const identifier * node);

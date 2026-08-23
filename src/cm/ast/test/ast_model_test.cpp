@@ -4,23 +4,23 @@
 // See accompanying file LICENSE for license information.
 //
 
-/// \file source_code_model_test.cpp
-/// Contains unit tests for the source_code_model class.
+/// \file ast_model_test.cpp
+/// Contains unit tests for the ast_model class.
 
 #include "pch.hpp"
-#include "cm/ast/source_code_model.hpp"
+#include "cm/ast/ast_model.hpp"
 #include <boost/test/unit_test.hpp>
 
 
 namespace cm::ast::test {
 
 
-struct source_code_model_test_fixture {
-    source_code_model cm;
+struct ast_model_test_fixture {
+    ast_model cm;
 };
 
 
-BOOST_FIXTURE_TEST_SUITE(source_code_model_test, source_code_model_test_fixture)
+BOOST_FIXTURE_TEST_SUITE(ast_model_test, ast_model_test_fixture)
 
 
 BOOST_AUTO_TEST_CASE(test_new) {

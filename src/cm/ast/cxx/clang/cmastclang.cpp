@@ -27,7 +27,7 @@ struct CXTranslationUnitImpl {
 };
 
 
-void parse_source_file(source_code_model & mdl,
+void parse_source_file(ast_model & mdl,
                        const std::filesystem::path & path,
                        const std::vector<std::string> & args) {
     // creating clang index

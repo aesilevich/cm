@@ -4,22 +4,22 @@
 // See accompanying file LICENSE for license information.
 //
 
-/// \file source_code_model.cpp
-/// Contains implementation of the source_code_model class
+/// \file ast_model.cpp
+/// Contains implementation of the ast_model class
 
 #include "pch.hpp"
-#include "cm/ast/source_code_model.hpp"
+#include "cm/ast/ast_model.hpp"
 #include <sstream>
 
 
 namespace cm::ast {
 
 
-void source_code_model::print(std::ostream & str) {    
+void ast_model::print(std::ostream & str) {    
 }
 
 
-source_file * source_code_model::find_source(const std::filesystem::path & p, bool find_name) {
+source_file * ast_model::find_source(const std::filesystem::path & p, bool find_name) {
     if (auto file = code_mdl_.find_source(p, find_name)) {
         if (auto it = sources_.find(file); it != sources_.end()) {
             return it->second.get();
@@ -30,7 +30,7 @@ source_file * source_code_model::find_source(const std::filesystem::path & p, bo
 }
 
 
-const source_file * source_code_model::find_source(const std::filesystem::path & p,
+const source_file * ast_model::find_source(const std::filesystem::path & p,
                                                    bool find_name) const {
     if (auto file = code_mdl_.find_source(p, find_name)) {
         if (auto it = sources_.find(file); it != sources_.end()) {
@@ -42,7 +42,7 @@ const source_file * source_code_model::find_source(const std::filesystem::path &
 }
 
 
-source_file * source_code_model::get_or_create_source(const std::filesystem::path & p) {
+source_file * ast_model::get_or_create_source(const std::filesystem::path & p) {
     auto cm_src = code_mdl_.source(p);
     auto & src = sources_[cm_src];
     if (src) {
@@ -95,7 +95,7 @@ private:
 
 
 /// Searches for AST node located at specified source position
-const ast_node * source_code_model::find_node_at_pos(const source_file_position & pos) const {
+const ast_node * ast_model::find_node_at_pos(const source_file_position & pos) const {
     // looking for source file AST node
     auto src_it = sources_.find(pos.file());
     if (src_it == sources_.end()) {
@@ -116,7 +116,7 @@ const ast_node * source_code_model::find_node_at_pos(const source_file_position 
 }
 
 
-const ast_node * source_code_model::find_child_node_at_pos(const ast_node * node,
+const ast_node * ast_model::find_child_node_at_pos(const ast_node * node,
                                                            const source_position & pos) {
     
     if (node->source_range().is_valid()) {

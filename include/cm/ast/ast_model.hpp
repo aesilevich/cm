@@ -4,8 +4,8 @@
 // See accompanying file LICENSE for license information.
 //
 
-/// \file source_code_model.hpp
-/// Contains definition of the source_code_model class.
+/// \file ast_model.hpp
+/// Contains definition of the ast_model class.
 
 #pragma once
 
@@ -23,13 +23,13 @@ namespace cm::ast {
 
 
 /// Source code model
-class source_code_model {
+class ast_model {
 public:
     /// Constructs emtpy source code model
-    source_code_model() = default;
+    ast_model() = default;
 
     /// Destroys source code model
-    ~source_code_model() = default;
+    ~ast_model() = default;
 
     /// Returns reference to underlying code model
     code_model & code_mdl() { return code_mdl_; }

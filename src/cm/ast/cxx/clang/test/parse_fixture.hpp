@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "cm/ast/source_code_model.hpp"
+#include "cm/ast/ast_model.hpp"
 #include <filesystem>
 
 
@@ -18,7 +18,7 @@ namespace cm::ast::cxx::clang::test {
 
 /// Fixture for parsing tests
 struct parse_fixture {
-    source_code_model mdl;
+    ast_model mdl;
 
     /// Returns path to test sources
     static std::filesystem::path test_src_path() {

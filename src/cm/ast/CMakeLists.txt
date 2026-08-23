@@ -4,7 +4,7 @@ add_library(cm-ast
             ast_printer.cpp
             declaration.cpp
             functional_decl.cpp
-            source_code_model.cpp
+            ast_model.cpp
             template_decl.cpp
            )
 

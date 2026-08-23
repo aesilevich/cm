@@ -1,7 +1,7 @@
 
 # Source code model test
 add_executable(cm-ast-test
-               source_code_model_test.cpp
+               ast_model_test.cpp
                source_file_position_test.cpp
                test.cpp
               )

@@ -19,7 +19,7 @@ str_{str} {
 }
 
 
-void ast_printer::print(const source_code_model & mdl_) {
+void ast_printer::print(const ast_model & mdl_) {
     for (auto && src : mdl_.sources()) {
         traverse(src);
     }

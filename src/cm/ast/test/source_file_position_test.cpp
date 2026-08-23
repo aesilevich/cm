@@ -8,7 +8,7 @@
 /// Contains unit tests for source_file_position and source_file_position_desc classes.
 
 #include "pch.hpp"
-#include "cm/ast/source_code_model.hpp"
+#include "cm/ast/ast_model.hpp"
 #include <boost/test/unit_test.hpp>
 
 
