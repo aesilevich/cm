@@ -1,0 +1,21 @@
+source_file "array_dependent.cpp" {
+    decl_context {
+        template ["array_dependent.cpp": (4, 1) - (7, 1)] {
+            value_template_parameter_decl ["array_dependent.cpp": (4, 11) - (4, 16)] {
+                identifier ["array_dependent.cpp": (4, 15) - (4, 16)] N;
+                builtin_type_spec ["array_dependent.cpp": (4, 11) - (4, 11)] int;
+            }
+            record ["array_dependent.cpp": (5, 1) - (7, 1)] {
+                identifier ["array_dependent.cpp": (5, 8) - (5, 17)] my_record;
+                decl_context {
+                    field_decl ["array_dependent.cpp": (6, 5) - (6, 19)] {
+                        identifier ["array_dependent.cpp": (6, 9) - (6, 17)] my_array;
+                        array_type_spec ["array_dependent.cpp": (6, 5) - (6, 19)] {
+                            builtin_type_spec ["array_dependent.cpp": (6, 5) - (6, 5)] int;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

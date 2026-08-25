@@ -354,7 +354,17 @@ void ast_printer::print_type(const type_spec * type) const {
         str_ << " &&";
     } else if (auto arr_type = dynamic_cast<const array_type_spec*>(type)) {
         print_type(arr_type->base());
-        str_ << "[]";
+
+        // array size is not stored in the AST model, printing it from the entity
+        str_ << '[';
+
+        if (auto f_type = arr_type->entity()->cast<fixed_array_type>()) {
+            str_ << f_type->size();
+        } else if (auto v_type = arr_type->entity()->cast<value_sized_array_type>()) {
+            str_ << v_type->size().str();
+        }
+
+        str_ << ']';
     } else if (auto f_type = dynamic_cast<const function_type_spec*>(type)) {
         // str_ << '(';
         // bool first = true;

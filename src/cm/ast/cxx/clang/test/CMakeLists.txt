@@ -35,13 +35,9 @@ endforeach()
 # Tests in this list are not converted by the AST converter yet. Each one is
 # disabled because of an assert in the AST converter, not because of a wrong result.
 set(cm_disabled_parse_tests
-        array                               # ArrayTypeLoc is not implemented
-        array_dependent                     # DependentSizedArrayTypeLoc is not implemented
-        array_incomplete                    # IncompleteArrayTypeLoc is not implemented
         decltype_type                       # DecltypeTypeLoc is not implemented
         dependent_name                      # type loc conversion without function body
         partial_template_specialization     # type loc conversion without function body
-        template_arg_decl                   # ArrayTypeLoc is not implemented
         template_arg_expr                   # type loc conversion without function body
         template_arg_template               # template template parameters are not implemented
         template_arg_template_expansion     # template template parameters are not implemented

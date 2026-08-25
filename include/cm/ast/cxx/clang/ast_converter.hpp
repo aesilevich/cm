@@ -210,6 +210,11 @@ private:
     convert_rvalue_reference_type_spec(ast_node * parent,
                                        const ::clang::RValueReferenceTypeLoc & loc);
 
+    /// Converts array type location to array type specifier. Handles all kinds
+    /// of array types.
+    std::unique_ptr<array_type_spec>
+    convert_array_type_spec(ast_node * parent, const ::clang::ArrayTypeLoc & loc);
+
     /// Converts parens () type specifier
     std::unique_ptr<parens_type_spec>
     convert_parens_type_spec(ast_node * parent, const ::clang::ParenTypeLoc & loc);

@@ -807,6 +807,23 @@ ast_converter::convert_pointer_type_spec(ast_node * parent, const ::clang::Point
 }
 
 
+std::unique_ptr<array_type_spec>
+ast_converter::convert_array_type_spec(ast_node * parent, const ::clang::ArrayTypeLoc & loc) {
+    auto clang_type = ::clang::dyn_cast<::clang::ArrayType>(loc.getTypePtr());
+    assert(clang_type && "invalid clang type for array type loc");
+
+    // array size is stored in the code model type, so all kinds of array types
+    // are converted to the same array type specifier
+    auto type = cm_conv_.get_type_as<array_type>(clang_type);
+    auto res = std::make_unique<array_type_spec>(parent);
+    res->set_entity(type);
+    res->set_source_range(convert_source_range(loc.getSourceRange()));
+    res->set_base(convert_type_spec(res.get(), loc.getElementLoc()));
+
+    return res;
+}
+
+
 std::unique_ptr<lvalue_reference_type_spec>
 ast_converter::convert_lvalue_reference_type_spec(ast_node * parent,
                                                   const ::clang::LValueReferenceTypeLoc & loc) {
@@ -1047,8 +1064,7 @@ ast_converter::convert_type_spec(ast_node * parent, const ::clang::TypeLoc & loc
         assert(false && "NYI");
         return {};
     } else if (auto arr_loc = loc.getAs<::clang::ArrayTypeLoc>()) {
-        assert(false && "NYI");
-        return {};
+        return convert_array_type_spec(parent, arr_loc);
     } else if (auto vec_loc = loc.getAs<::clang::VectorTypeLoc>()) {
         assert(false && "NYI");
         return {};

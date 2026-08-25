@@ -1,0 +1,10 @@
+source_file "array.cpp" {
+    decl_context {
+        global_variable_decl ["array.cpp": (4, 1) - (4, 15)] {
+            identifier ["array.cpp": (4, 5) - (4, 13)] my_array;
+            array_type_spec ["array.cpp": (4, 1) - (4, 15)] {
+                builtin_type_spec ["array.cpp": (4, 1) - (4, 1)] int;
+            }
+        }
+    }
+}

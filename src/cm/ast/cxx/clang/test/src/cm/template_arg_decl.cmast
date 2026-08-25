@@ -1,0 +1,47 @@
+source_file "template_arg_decl.cpp" {
+    decl_context {
+        global_variable_decl ["template_arg_decl.cpp": (5, 1) - (5, 5)] {
+            identifier ["template_arg_decl.cpp": (5, 5) - (5, 13)] glob_var;
+            builtin_type_spec ["template_arg_decl.cpp": (5, 1) - (5, 1)] int;
+        }
+        global_variable_decl ["template_arg_decl.cpp": (6, 1) - (6, 15)] {
+            identifier ["template_arg_decl.cpp": (6, 5) - (6, 13)] glob_arr;
+            array_type_spec ["template_arg_decl.cpp": (6, 1) - (6, 15)] {
+                builtin_type_spec ["template_arg_decl.cpp": (6, 1) - (6, 1)] int;
+            }
+        }
+        template ["template_arg_decl.cpp": (9, 1) - (11, 1)] {
+            value_template_parameter_decl ["template_arg_decl.cpp": (9, 11) - (9, 18)] {
+                identifier ["template_arg_decl.cpp": (9, 17) - (9, 18)] P;
+                pointer_type_spec ["template_arg_decl.cpp": (9, 11) - (9, 15)] {
+                    builtin_type_spec ["template_arg_decl.cpp": (9, 11) - (9, 11)] int;
+                }
+            }
+            record ["template_arg_decl.cpp": (10, 1) - (11, 1)] {
+                identifier ["template_arg_decl.cpp": (10, 8) - (10, 15)] ptr_arg;
+                decl_context {
+                }
+            }
+        }
+        global_variable_decl ["template_arg_decl.cpp": (14, 1) - (14, 20)] {
+            identifier ["template_arg_decl.cpp": (14, 20) - (14, 22)] v1;
+            template_record_instantiation_type_spec ["template_arg_decl.cpp": (14, 1) - (14, 18)] {
+                template_spec ["template_arg_decl.cpp": (14, 1) - (14, 8)] {
+                    identifier ["template_arg_decl.cpp": (14, 1) - (14, 8)] ptr_arg;
+                }
+                value_template_argument_spec ["template_arg_decl.cpp": (14, 9) - (14, 18)] {
+                }
+            }
+        }
+        global_variable_decl ["template_arg_decl.cpp": (15, 1) - (15, 19)] {
+            identifier ["template_arg_decl.cpp": (15, 19) - (15, 21)] v2;
+            template_record_instantiation_type_spec ["template_arg_decl.cpp": (15, 1) - (15, 17)] {
+                template_spec ["template_arg_decl.cpp": (15, 1) - (15, 8)] {
+                    identifier ["template_arg_decl.cpp": (15, 1) - (15, 8)] ptr_arg;
+                }
+                value_template_argument_spec ["template_arg_decl.cpp": (15, 9) - (15, 17)] {
+                }
+            }
+        }
+    }
+}

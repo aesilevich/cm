@@ -1,0 +1,10 @@
+source_file "array_incomplete.cpp" {
+    decl_context {
+        global_variable_decl ["array_incomplete.cpp": (4, 1) - (4, 21)] {
+            identifier ["array_incomplete.cpp": (4, 12) - (4, 20)] my_array;
+            array_type_spec ["array_incomplete.cpp": (4, 8) - (4, 21)] {
+                builtin_type_spec ["array_incomplete.cpp": (4, 8) - (4, 8)] int;
+            }
+        }
+    }
+}
