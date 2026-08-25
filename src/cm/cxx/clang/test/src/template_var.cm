@@ -1,0 +1,7 @@
+template struct str<type T> {
+    injected struct str;
+    field x: int;
+};
+
+template var var<type T>: str<T>;
+template_dependent_instantiation struct str<T>;

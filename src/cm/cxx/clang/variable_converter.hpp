@@ -10,6 +10,7 @@
 #pragma once
 
 #include "decl_converter.hpp"
+#include <clang/AST/DeclTemplate.h>
 
 
 namespace cm::cxx::clang {
@@ -21,7 +22,11 @@ struct variable_converter {
     using clang_decl_t = ::clang::VarDecl;
 
     /// Checks if clang decl matches converter
-    static constexpr bool match(const clang_decl_t * decl) { return true; }
+    static bool match(const clang_decl_t * decl) {
+        // variable templates and their specializations are converted by their own converters
+        return decl->getDescribedVarTemplate() == nullptr &&
+               ::clang::dyn_cast<::clang::VarTemplateSpecializationDecl>(decl) == nullptr;
+    }
 
     /// Creates entity for clang namespace decl
     static variable * create_entity(converter_impl & conv, const clang_decl_t * decl);

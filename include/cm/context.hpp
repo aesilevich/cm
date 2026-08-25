@@ -34,6 +34,7 @@ class template_function;
 class template_instantiation;
 class template_record;
 class template_record_instantiation_type;
+class template_variable;
 
 
 /// Represents context in code model that contains code model entities
@@ -378,6 +379,28 @@ public:
 
     /// Creates template record with specified name and kind.
     template_record * create_template_record(const std::string & name, record_kind knd);
+
+
+    //////////////////////////////////////////////////////////////////////
+    // Template variables
+
+    /// Returns const range of template variables
+    /// NOTE: implemented in template_variable.hpp
+    auto template_variables() const;
+
+    /// Returns range of template variables
+    /// NOTE: implemented in template_variable.hpp
+    auto template_variables();
+
+    /// Searches for template variable with specified name. Return null if not found.
+    const template_variable * find_template_variable(const std::string & name) const;
+
+    /// Searches for template variable with specified name. Return null if not found.
+    template_variable * find_template_variable(const std::string & name);
+
+    /// Creates template variable with specified name. The variable type is empty and
+    /// should be set after converting template parameters.
+    template_variable * create_template_variable(const std::string & name);
 
 
     //////////////////////////////////////////////////////////////////////

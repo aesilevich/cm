@@ -16,6 +16,7 @@
 #include "cm/template_function.hpp"
 #include "cm/template_instantiation.hpp"
 #include "cm/template_record.hpp"
+#include "cm/template_variable.hpp"
 #include <ranges>
 #include <sstream>
 #include <iostream>
@@ -166,6 +167,21 @@ template_record * context::create_template_record(const std::string & name, reco
 }
 
 
+const template_variable * context::find_template_variable(const std::string & name) const {
+    return find_named_entity<template_variable>(name);
+}
+
+
+template_variable * context::find_template_variable(const std::string & name) {
+    return find_named_entity<template_variable>(name);
+}
+
+
+template_variable * context::create_template_variable(const std::string & name) {
+    return create_named_entity<template_variable>(name);
+}
+
+
 void context::remove_named_entity_from_map(named_context_entity * ent) {
     auto [first, last] = named_entities_.equal_range(ent->name());
     auto it = std::find_if(first, last, [ent](auto && p) { return p.second == ent; });
@@ -203,8 +219,11 @@ void context::dump_entities(std::ostream & str,
             continue;
         }
 
+        // functions and template variables are contexts but they are dumped as a
+        // single line, so they are not separated with empty lines
         bool entity_is_context = dynamic_cast<const context*>(ent) != nullptr &&
-                                 dynamic_cast<const function*>(ent) == nullptr;
+                                 dynamic_cast<const function*>(ent) == nullptr &&
+                                 dynamic_cast<const variable*>(ent) == nullptr;
 
         // printing separator line between context entities (records, namespaces, etc)
         if (prev_entity_is_context || (entity_is_context && !first)) {

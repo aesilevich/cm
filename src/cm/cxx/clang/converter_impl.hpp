@@ -18,6 +18,9 @@
 #include "template_record_converter.hpp"
 #include "template_record_partial_specialization_converter.hpp"
 #include "template_record_specialization_converter.hpp"
+#include "template_variable_converter.hpp"
+#include "template_variable_partial_specialization_converter.hpp"
+#include "template_variable_specialization_converter.hpp"
 #include "typedef_converter.hpp"
 #include "variable_converter.hpp"
 #include "cm/cm.hpp"
@@ -38,6 +41,9 @@ class converter_impl {
         template_record_specialization_converter,
         record_converter,
         template_record_partial_specialization_converter,
+        template_variable_converter,
+        template_variable_partial_specialization_converter,
+        template_variable_specialization_converter,
         typedef_converter,
         function_converter,
         variable_converter,
@@ -52,21 +58,21 @@ public:
     public:
         /// Constructs setter with invalid state
         explicit decl_context_setter(converter_impl & conv_ctx):
-            conv_ctx_{&conv_ctx}, old_ctx_{nullptr}, old_clang_ctx_{nullptr} {}
+            conv_ctx_{&conv_ctx}, old_ctx_{nullptr}, old_clang_decl_{nullptr} {}
 
-        /// Constructs setter. Sets new current context and clang declaration context
-        /// and stores old contexts in this setter instance.
+        /// Constructs setter. Sets new current context and clang declaration
+        /// and stores old ones in this setter instance.
         explicit decl_context_setter(converter_impl & conv_ctx,
                                      context * ctx,
-                                     const ::clang::DeclContext * clang_ctx):
+                                     const ::clang::Decl * clang_decl):
         conv_ctx_{&conv_ctx},
         old_ctx_{conv_ctx.decl_ctx()},
-        old_clang_ctx_{conv_ctx.clang_decl_ctx()} {
+        old_clang_decl_{conv_ctx.clang_decl()} {
             assert(ctx != nullptr && "invalid context");
-            assert(clang_ctx != nullptr && "invalid clang decl context");
+            assert(clang_decl != nullptr && "invalid clang declaration");
 
             conv_ctx_->set_decl_ctx(ctx);
-            conv_ctx_->set_clang_decl_ctx(clang_ctx);
+            conv_ctx_->set_clang_decl(clang_decl);
         }
 
         /// Restores old current context and clang declaration context if setter state is valid
@@ -79,36 +85,36 @@ public:
         decl_context_setter(decl_context_setter && other) = delete;
         decl_context_setter & operator=(decl_context_setter && other) = delete;
 
-        /// Sets current context and clang context in AST converter.
-        /// Saves previous contexts. The state of setter must be invalid
-        void set(context * ctx, const ::clang::DeclContext * clang_ctx) {
+        /// Sets current context and clang declaration in AST converter.
+        /// Saves previous ones. The state of setter must be invalid
+        void set(context * ctx, const ::clang::Decl * clang_decl) {
             assert(old_ctx_ == nullptr && "the state of setter is not invalid");
-            assert(old_clang_ctx_ == nullptr && "the state of setter is not invalid");
+            assert(old_clang_decl_ == nullptr && "the state of setter is not invalid");
 
             assert(ctx != nullptr && "context is null");
-            assert(clang_ctx != nullptr && "clang decl context is null");
+            assert(clang_decl != nullptr && "clang declaration is null");
 
             old_ctx_ = conv_ctx_->decl_ctx();;
-            old_clang_ctx_ = conv_ctx_->clang_decl_ctx();
+            old_clang_decl_ = conv_ctx_->clang_decl();
 
             conv_ctx_->set_decl_ctx(ctx);
-            conv_ctx_->set_clang_decl_ctx(clang_ctx);
+            conv_ctx_->set_clang_decl(clang_decl);
         }
 
         /// Restores old contexts in AST converter. Sets state of setter to invalid.
         void restore() {
             if (conv_ctx_) {
                 conv_ctx_->set_decl_ctx(old_ctx_);
-                conv_ctx_->set_clang_decl_ctx(old_clang_ctx_);
+                conv_ctx_->set_clang_decl(old_clang_decl_);
                 old_ctx_ = nullptr;
-                old_clang_ctx_ = nullptr;
+                old_clang_decl_ = nullptr;
             }
         }
 
     private:
-        converter_impl * conv_ctx_;                       ///< Pointer to converter context
-        context * old_ctx_;                             ///< Previous context
-        const ::clang::DeclContext * old_clang_ctx_;    ///< Previous clang context
+        converter_impl * conv_ctx_;              ///< Pointer to converter context
+        context * old_ctx_;                     ///< Previous context
+        const ::clang::Decl * old_clang_decl_;  ///< Previous clang declaration
     };
 
 
@@ -142,11 +148,11 @@ public:
     /// Sets pointer to current declaration context in code model
     void set_decl_ctx(context * c) { decl_ctx_ = c; }
 
-    /// Returns pointer to current clang declaration context
-    const ::clang::DeclContext * clang_decl_ctx() const { return clang_decl_ctx_; }
+    /// Returns pointer to the clang declaration being converted
+    const ::clang::Decl * clang_decl() const { return clang_decl_; }
 
-    /// Sets pointer to current clang declaration context
-    void set_clang_decl_ctx(const ::clang::DeclContext * c) { clang_decl_ctx_ = c; }
+    /// Sets pointer to the clang declaration being converted
+    void set_clang_decl(const ::clang::Decl * d) { clang_decl_ = d; }
 
 
     ////////////////////////////////////////////////////////////
@@ -272,7 +278,7 @@ private:
     code_model & mdl_;                                      ///< Reference to code model
     const ::clang::ASTContext & clang_ctx_;                 ///< Reference to Clang AST context
     context * decl_ctx_ = nullptr;                          ///< Current code model context
-    const ::clang::DeclContext * clang_decl_ctx_ = nullptr; ///< Current clang decl context
+    const ::clang::Decl * clang_decl_ = nullptr;            ///< Current clang declaration
     decl_map decls_;                                        ///< Declarations map
     std::map<const ::clang::Type *, type_t *> types_;       ///< Types map
     decl_converters decl_convs_;                            ///< Tuple of decl converters

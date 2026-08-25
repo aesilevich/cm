@@ -29,6 +29,7 @@
 #include "template_function.hpp"
 #include "template_record.hpp"
 #include "template_specialization.hpp"
+#include "template_variable.hpp"
 #include "type.hpp"
 #include "typedef_type.hpp"
 #include "variable.hpp"

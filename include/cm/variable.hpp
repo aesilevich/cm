@@ -19,7 +19,7 @@ namespace cm {
 
 
 /// Represents variable in code model
-class variable: public named_context_entity, virtual public single_type_use {
+class variable: virtual public named_context_entity, virtual public single_type_use {
 public:
     /// Constructs variable with specified name and type. Adds use to type
     variable(context * ctx, const std::string & nm, const qual_type & t):

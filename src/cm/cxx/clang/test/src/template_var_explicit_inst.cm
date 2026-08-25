@@ -1,0 +1,2 @@
+template var var<type T>: T;
+template_instantiation var var<int>: int;

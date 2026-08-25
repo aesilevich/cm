@@ -48,6 +48,12 @@ add_library(cm-cxx-clang
             template_record_partial_specialization_converter.hpp
             template_record_specialization_converter.cpp
             template_record_specialization_converter.hpp
+            template_variable_converter.cpp
+            template_variable_converter.hpp
+            template_variable_partial_specialization_converter.cpp
+            template_variable_partial_specialization_converter.hpp
+            template_variable_specialization_converter.cpp
+            template_variable_specialization_converter.hpp
             template_specialization_type_converter.cpp
             template_specialization_type_converter.hpp
             type_converter.hpp

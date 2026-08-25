@@ -44,6 +44,11 @@ set(cm_disabled_parse_tests
         template_class_specialization       # template specialization parsing is not implemented
         template_dependent_inst             # dependent template instantiation is not implemented
         template_param_template             # template template parameters are not implemented
+        template_var                        # variable templates are not implemented
+        template_var_explicit_inst          # variable templates are not implemented
+        template_var_inst                   # variable templates are not implemented
+        template_var_partial_specialization # variable templates are not implemented
+        template_var_specialization         # variable templates are not implemented
         variadic_func                       # PackExpansionTypeLoc is not implemented
         variadic_templ_arg_pack             # type loc conversion without function body
     )

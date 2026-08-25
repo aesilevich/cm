@@ -411,8 +411,16 @@ void code_model::remove_entity_and_uses(entity * ent) {
 
         // special case for function return type
         auto func = dynamic_cast<function*>(ent_use_ent);
+
+        // special case for the type of a templated variable: the type can be one of the
+        // template parameters of the variable itself
+        auto templ_var = ent_use_ent->is<templated_entity>() ?
+                         dynamic_cast<variable*>(ent_use_ent) : nullptr;
+
         if (func && func->ret_type().type() == ent) {
             func->set_ret_type({});
+        } else if (templ_var && templ_var->type().type() == ent) {
+            templ_var->set_type({});
         } else {
             remove_entity_and_uses(ent_use_ent);
         }

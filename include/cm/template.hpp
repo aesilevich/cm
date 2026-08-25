@@ -161,6 +161,22 @@ protected:
         return ctx()->create_entity<Substitution>(this_ptr);
     }
 
+    /// Creates named template substitution of specified type from template arguments.
+    /// Substitution is created with the name of this template. Used for substitutions
+    /// that are named entities themselves, i.e. template variable substitutions.
+    template <
+        std::derived_from<template_substitution> Substitution,
+        typename Template,
+        typename ... Args
+    >
+    Substitution * create_named_substitution_impl(Template * this_ptr, Args && ... args) {
+        assert(find_substitution(args...) == nullptr &&
+               "tempalte substitution with same arguments already exists");
+
+        return ctx()->template create_named_entity<Substitution>(
+            name(), this_ptr, std::forward<Args>(args)...);
+    }
+
 
 private:
     /// Creates template instantiation from vector of arguments

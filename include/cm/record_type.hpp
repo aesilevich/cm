@@ -337,7 +337,8 @@ inline field::field(record * rec,
                                             const std::string & nm,
                                             const qual_type & tp,
                                             unsigned int bsize):
-variable(rec, nm, tp), context_entity(rec), bit_size_{bsize}, single_type_use{tp} {
+variable(rec, nm, tp), named_context_entity{rec, nm}, context_entity(rec),
+bit_size_{bsize}, single_type_use{tp} {
 
     // number of bits can be specified only for integral types
 
@@ -373,7 +374,7 @@ variable(rec, nm, tp), context_entity(rec), bit_size_{bsize}, single_type_use{tp
 inline static_record_variable::static_record_variable(record * rec,
                                                       const std::string & nm,
                                                       const qual_type & tp):
-variable{rec, nm, tp}, context_entity{rec}, single_type_use{tp} {}
+variable{rec, nm, tp}, named_context_entity{rec, nm}, context_entity{rec}, single_type_use{tp} {}
 
 
 

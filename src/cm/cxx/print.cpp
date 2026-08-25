@@ -84,15 +84,16 @@ static void print_context_entity_name(std::ostream & str, const context_entity *
         }
     }
 
-    // printing named context entity
-    if (auto n_ent = dynamic_cast<const named_entity*>(ent)) {
-        str << n_ent->name();
+    // printing template instantiation entity. Checked before the named entity because
+    // template variable instantiations are named entities
+    if (auto t_inst = dynamic_cast<const template_instantiation*>(ent)) {
+        print_template_instantiation_name(str, t_inst);
         return;
     }
 
-    // printing template instantiation entity
-    if (auto t_inst = dynamic_cast<const template_instantiation*>(ent)) {
-        print_template_instantiation_name(str, t_inst);
+    // printing named context entity
+    if (auto n_ent = dynamic_cast<const named_entity*>(ent)) {
+        str << n_ent->name();
         return;
     }
 

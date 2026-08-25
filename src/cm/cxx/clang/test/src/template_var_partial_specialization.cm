@@ -1,0 +1,4 @@
+template var var<type T>: T;
+template_instantiation var var<int *>: int *;
+template_partial_specialization<type T> var var<T *>: T *;
+func use() -> int *;
