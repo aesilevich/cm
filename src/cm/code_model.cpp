@@ -415,7 +415,7 @@ void code_model::remove_entity_and_uses(entity * ent) {
         } else {
             assert(false && "don't know how to remove type");
         }
-    } else if (auto t_arg = ent->cast<type_template_argument>()) {
+    } else if (auto t_arg = ent->cast<template_argument>()) {
         t_arg->substitution()->remove_arg(t_arg);
     } else {
         assert(false && "don't know how to remove entity");

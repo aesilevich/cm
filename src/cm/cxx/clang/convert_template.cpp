@@ -37,6 +37,12 @@ static void update_template_params(converter_impl & conv,
         par->ctx()->rename_entity(par, clang_par->getName());
         par->set_loc(convert_loc(conv, clang_par->getLocation()));
 
+        // updating template parameters of the template template parameter itself
+        if (auto cm_templ_par = dynamic_cast<template_template_parameter*>(par)) {
+            auto clang_templ_par = ::clang::cast<::clang::TemplateTemplateParmDecl>(clang_par);
+            update_template_params(conv, cm_templ_par, clang_templ_par->getTemplateParameters());
+        }
+
         ++par_it;
     }
 }
@@ -80,8 +86,11 @@ void convert_template_params(converter_impl & conv,
             auto par_type = conv.type(clang_val_par->getType());
             cm_par = templ->add_value_template_param(par_name, par_type.type());
         } else if (auto clang_templ_par = ::clang::dyn_cast<::clang::TemplateTemplateParmDecl>(par)) {
-            // TODO: implement template template parameters
-            cm_par = templ->add_type_template_param(par_name);
+            auto cm_templ_par = templ->add_template_template_param(par_name);
+
+            // converting template parameters of the template template parameter itself
+            convert_template_params(conv, cm_templ_par, clang_templ_par->getTemplateParameters());
+            cm_par = cm_templ_par;
         
         // C++20 support in latest clang
         // } else if (auto clang_obj_par = ::clang::dyn_cast<::clang::TemplateParamObjectDecl>(par)) {
@@ -121,6 +130,18 @@ convert_template_arguments(converter_impl & conv,
             ::llvm::SmallString<16> sstr;
             targ.getAsIntegral().toString(sstr, 10);
             res.push_back(value{sstr.str().str()});
+            break;
+        }
+        case ::clang::TemplateArgument::ArgKind::Template:
+        case ::clang::TemplateArgument::ArgKind::TemplateExpansion: {
+            auto clang_templ_decl = targ.getAsTemplateOrTemplatePattern().getAsTemplateDecl();
+            assert(clang_templ_decl && "can't get template decl for template argument");
+
+            auto cm_templ = conv.decl_entity_as<template_name>(clang_templ_decl);
+            bool is_expansion =
+                targ.getKind() == ::clang::TemplateArgument::ArgKind::TemplateExpansion;
+
+            res.push_back(template_argument_desc{cm_templ, is_expansion});
             break;
         }
         default:

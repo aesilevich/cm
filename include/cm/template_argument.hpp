@@ -67,6 +67,46 @@ public:
 };
 
 
+/// Template template argument
+class template_template_argument: public template_argument,
+                                  public entity_use_impl<template_name> {
+public:
+    /// Constructs template template argument
+    explicit template_template_argument(template_substitution * subst,
+                                        template_name * templ,
+                                        bool is_expansion = false):
+        template_argument{subst}, entity_use_impl<template_name>{templ},
+        is_expansion_{is_expansion} {}
+
+    /// Returns true if argument is an expansion of a template parameter pack
+    bool is_expansion() const { return is_expansion_; }
+
+    /// Sets whether argument is an expansion of a template parameter pack
+    void set_is_expansion(bool is_exp) { is_expansion_ = is_exp; }
+
+    /// Returns template argument description
+    template_argument_desc desc() override {
+        return template_argument_desc{used_entity(), is_expansion_};
+    }
+
+    /// Returns const template argument description
+    const_template_argument_desc desc() const override {
+        return const_template_argument_desc{used_entity(), is_expansion_};
+    }
+
+    /// Prints template argument description
+    void print_desc(std::ostream & str) const override {
+        str << used_entity()->name();
+        if (is_expansion_) {
+            str << " ...";
+        }
+    }
+
+private:
+    bool is_expansion_ = false;     ///< True if argument is a parameter pack expansion
+};
+
+
 /// Value template argument
 class value_template_argument: public template_argument {
 public:

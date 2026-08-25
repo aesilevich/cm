@@ -1,0 +1,15 @@
+template struct vec<type T> {
+    injected struct vec;
+};
+
+template struct templ_arg<template <type> T> {
+    injected struct templ_arg;
+};
+
+template_instantiation struct templ_arg<vec> {
+    method templ_arg() -> void;
+    method templ_arg(templ_arg<vec> &) -> void;
+    method templ_arg(templ_arg<vec> &&) -> void;
+};
+
+var v: templ_arg<vec>;

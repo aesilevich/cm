@@ -1,0 +1,15 @@
+template struct pair_t<type X, var N: int> {
+    injected struct pair_t;
+};
+
+template struct unnamed_inner<template <type, var: int> T> {
+    injected struct unnamed_inner;
+};
+
+template struct named_inner<template <type X, var N: int> T> {
+    injected struct named_inner;
+};
+
+template struct pack_inner<template <type ...> T> {
+    injected struct pack_inner;
+};

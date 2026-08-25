@@ -14,6 +14,7 @@ namespace cm {
 
 
 class templated_entity;
+class template_template_parameter;
 
 
 /// Represents template parameter definition
@@ -64,12 +65,15 @@ public:
 
     /// Dumps template parameter to output stream
     void dump(std::ostream & str, const dump_options & opts, unsigned int indent) const override {
-        str << "type ";
+        str << "type";
         if (is_variadic()) {
-            str << "... ";
+            str << " ...";
         }
 
-        str << name();
+        if (!name().empty()) {
+            str << ' ' << name();
+        }
+
         context_entity::dump_loc(str, opts);
     }
 };
@@ -93,12 +97,16 @@ public:
 
     /// Dumps template parameter to output stream
     void dump(std::ostream & str, const dump_options & opts, unsigned int indent) const override {
-        str << "var ";
+        str << "var";
         if (is_variadic()) {
-            str << "... ";
+            str << " ...";
         }
 
-        str << name() << ": ";
+        if (!name().empty()) {
+            str << ' ' << name();
+        }
+
+        str << ": ";
         type()->print_desc(str);
         context_entity::dump_loc(str, opts);
     }
@@ -156,6 +164,9 @@ public:
         return create_named_entity<type_template_parameter>(nm);
     }
 
+    /// Adds template template parameter with specified name
+    inline template_template_parameter * add_template_template_param(const std::string & nm);
+
     /// Adds value template parameter with specified name and type
     value_template_parameter * add_value_template_param(const std::string & nm, type_t * t) {
         return create_named_entity<value_template_parameter>(nm, t);
@@ -180,6 +191,53 @@ public:
     }
 };
 
+
+
+/// Template template parameter
+class template_template_parameter: public template_parameter,
+                                   public templated_entity,
+                                   public template_name {
+public:
+    /// Constructs template template parameter with specified name
+    explicit template_template_parameter(context * ctx, const std::string & nm):
+        template_parameter{ctx, nm},
+        templated_entity{ctx},
+        named_context_entity{ctx, nm},
+        context{ctx},
+        context_entity{ctx} {}
+
+    /// Returns name of context_entity
+    const std::string & name() const override {
+        return template_parameter::name();
+    }
+
+    /// Returns default access level for this context
+    access_level default_access_level() const override {
+        return access_level::public_;
+    }
+
+    /// Dumps template parameter to output stream
+    void dump(std::ostream & str, const dump_options & opts, unsigned int indent) const override {
+        str << "template ";
+        dump_template_params(str, opts);
+
+        if (is_variadic()) {
+            str << " ...";
+        }
+
+        if (!name().empty()) {
+            str << ' ' << name();
+        }
+
+        context_entity::dump_loc(str, opts);
+    }
+};
+
+
+inline template_template_parameter *
+templated_entity::add_template_template_param(const std::string & nm) {
+    return create_named_entity<template_template_parameter>(nm);
+}
 
 
 inline templated_entity * template_parameter::templ() {

@@ -88,6 +88,11 @@ public:
     void add_arg(const template_argument_desc & arg_desc) {
         if (arg_desc.is_type()) {
             add_arg(std::make_unique<type_template_argument>(this, arg_desc.type()));
+        } else if (arg_desc.is_template()) {
+            auto templ_desc = arg_desc.templ();
+            add_arg(std::make_unique<template_template_argument>(this,
+                                                                 templ_desc.templ,
+                                                                 templ_desc.is_expansion));
         } else {
             add_arg(std::make_unique<value_template_argument>(this, arg_desc.value()));
         }

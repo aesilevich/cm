@@ -1,0 +1,14 @@
+template struct vec<type T> {
+    injected struct vec;
+};
+
+template struct templ_pack<template <type> ... T> {
+    injected struct templ_pack;
+};
+
+template struct holder<template <type> ... U> {
+    injected struct holder;
+    typedef type = templ_pack<U ...>;
+};
+
+template_dependent_instantiation struct templ_pack<U ...>;
