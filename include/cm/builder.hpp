@@ -363,13 +363,38 @@ public:
     }
 
 private:
-    /// Returns template record created from template parameters
+    /// Returns existing or creates new template record
     template_record * get_or_create_template_record(record_kind kind) {
-        auto get_or_create_fn = [this, kind](auto && ... params) -> auto {
-            return parent_->ctx()->get_or_create_template_record(name_, kind, is_par_pack_, params...);
+        auto ctx = parent_->ctx();
+
+        if (auto rec = ctx->find_template_record(name_)) {
+            return rec;
+        }
+
+        auto rec = ctx->create_template_record(name_, kind);
+        add_template_params(rec);
+
+        return rec;
+    }
+
+    /// Adds template parameters stored in params_ variable to template
+    void add_template_params(templated_entity * templ) {
+        auto add_params_fn = [templ](auto && ... params) {
+            (add_template_param(templ, params), ...);
         };
 
-        return std::apply(get_or_create_fn, params_);
+        std::apply(add_params_fn, params_);
+    }
+
+    /// Adds type template parameter with specified name to template
+    static void add_template_param(templated_entity * templ, const std::string & nm) {
+        templ->add_type_template_param(nm);
+    }
+
+    /// Adds value template parameter with specified name and type to template
+    static void add_template_param(templated_entity * templ,
+                                   const std::tuple<std::string, type_t*> & par) {
+        templ->add_value_template_param(std::get<0>(par), std::get<1>(par));
     }
 
     /// Gets or creates record instance with specified id, kind, and range of parameters

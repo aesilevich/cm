@@ -255,13 +255,12 @@ BOOST_AUTO_TEST_CASE(create_rec_ptr_recursive) {
 /// Tests creating template with template instantiation parameter
 BOOST_AUTO_TEST_CASE(create_templ_inst_templ_inst) {
     auto std = cm.get_or_create_namespace("std");
-    auto placeholder = std->get_or_create_template_record("_Placeholder",
-                                                    cm::record_kind::class_,
-                                                    false,
-                                                    std::make_tuple("N", cm.bt_int()));
+    auto placeholder = std->create_template_record("_Placeholder", cm::record_kind::class_);
+    placeholder->add_value_template_param("N", cm.bt_int());
     auto placeholder_inst = placeholder->create_instantiation(cm::value{1});
 
-    auto foo = std->get_or_create_template_record("foo", cm::record_kind::class_, false, "T");
+    auto foo = std->create_template_record("foo", cm::record_kind::class_);
+    foo->add_type_template_param("T");
     auto foo_inst = foo->create_instantiation(placeholder_inst);
 }
 

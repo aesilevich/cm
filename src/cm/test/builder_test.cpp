@@ -209,7 +209,8 @@ BOOST_AUTO_TEST_CASE(template_record) {
         .end()
     .build();
 
-    auto ttt = cm.get_or_create_template_record("ttt", record_kind::class_, false);
+    auto ttt = cm.find_template_record("ttt");
+    BOOST_REQUIRE(ttt);
     auto inst = ttt->find_instantiation(cm.bt_int(), cm.bt_float());
     BOOST_REQUIRE(inst);
     BOOST_REQUIRE(inst->args().size() == 2);
@@ -229,7 +230,8 @@ BOOST_AUTO_TEST_CASE(template_record_use) {
         .end()
     .build();
 
-    auto ttt = cm.get_or_create_template_record("ttt", record_kind::class_, false);
+    auto ttt = cm.find_template_record("ttt");
+    BOOST_REQUIRE(ttt);
     auto inst = ttt->find_instantiation(cm.bt_int(), cm.bt_float());
     BOOST_REQUIRE(inst);
     BOOST_REQUIRE(inst->args().size() == 2);

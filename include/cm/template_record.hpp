@@ -143,30 +143,13 @@ public:
 /// Template record
 class template_record: public record, public template_ {
 public:
-    /// Constructs template record with specified parent decl context, name, kind,
-    /// parameter pack flag, and template parameters
+    /// Constructs template record with specified parent decl context, name, and kind.
     explicit template_record(context * ctx, const std::string & nm, record_kind knd):
     record{ctx, knd},
     template_{ctx, nm},
     named_context_entity{ctx, nm},
     context{ctx},
     context_entity{ctx} {
-        init();
-    }
-
-    /// Constructs template record with specified parent decl context, name, kind,
-    /// parameter pack flag, and list of named template parameters
-    template <typename ... Params>
-    explicit template_record(context * ctx,
-                             const std::string & nm,
-                             record_kind knd,
-                             Params && ... params):
-    record{ctx, knd},
-    template_{ctx, nm},
-    named_context_entity{ctx, nm},
-    context{ctx},
-    context_entity{ctx} {
-        this->add_params(std::forward<Params>(params)...);
         init();
     }
 
@@ -427,29 +410,6 @@ context_entity{ctx} {}
 
 template_record_partial_specialization * template_record::create_partial_specialization() {
     return ctx()->create_entity<template_record_partial_specialization>(this);
-}
-
-
-template <typename ... Params>
-template_record * context::get_or_create_template_record(const std::string & name,
-                                                         record_kind knd,
-                                                         bool is_variadic,
-                                                         Params && ... params) {
-    // looking for existing named entity
-    if (auto ent = find_named_entity(name)) {
-        // checking that entity is a template
-        auto templ = dynamic_cast<template_record*>(ent);
-        assert(templ && "named entity is not a template record");
-
-        // checking equality of template parameters of existing template
-        assert(templ->is_variadic() == is_variadic && "parameters pack flag does not match");
-        return templ;
-    }
-
-    // creating new template record
-    auto rec = create_template_record(name, knd, std::forward<Params>(params)...);
-    rec->set_is_variadic(is_variadic);
-    return rec;
 }
 
 

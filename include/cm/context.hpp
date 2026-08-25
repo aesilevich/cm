@@ -376,20 +376,8 @@ public:
     /// Searches for template record with specified name. Return null if not found.
     template_record * find_template_record(const std::string & name);
 
-    /// Creates template record with specified name, kind, parameter pack flag, and parameters list
-    template <typename ... Params>
-    template_record * create_template_record(const std::string & name,
-                                             record_kind knd,
-                                             Params && ... params) {
-        return create_named_entity<template_record>(name, knd, std::forward<Params>(params)...);
-    }
-
-    /// Helper function that gets existing or creates new template record
-    template <typename ... Params>
-    template_record * get_or_create_template_record(const std::string & name,
-                                                    record_kind knd,
-                                                    bool is_variadic,
-                                                    Params && ... params);
+    /// Creates template record with specified name and kind.
+    template_record * create_template_record(const std::string & name, record_kind knd);
 
 
     //////////////////////////////////////////////////////////////////////

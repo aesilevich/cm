@@ -161,6 +161,11 @@ template_record * context::find_template_record(const std::string & name) {
 }
 
 
+template_record * context::create_template_record(const std::string & name, record_kind knd) {
+    return create_named_entity<template_record>(name, knd);
+}
+
+
 void context::remove_named_entity_from_map(named_context_entity * ent) {
     auto [first, last] = named_entities_.equal_range(ent->name());
     auto it = std::find_if(first, last, [ent](auto && p) { return p.second == ent; });
