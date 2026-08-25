@@ -1,0 +1,19 @@
+source_file "typedef_record.cpp" {
+    decl_context {
+        record ["typedef_record.cpp": (3, 9) - (4, 1)] {
+            identifier ["typedef_record.cpp": (3, 16) - (3, 25)] my_record;
+            decl_context {
+            }
+        }
+        typedef ["typedef_record.cpp": (3, 1) - (4, 13)] {
+            identifier ["typedef_record.cpp": (4, 3) - (4, 13)] my_typedef;
+            record_decl_type_spec ["typedef_record.cpp": (3, 9) - (4, 1)] {
+                record ["typedef_record.cpp": (3, 9) - (4, 1)] {
+                    identifier ["typedef_record.cpp": (3, 16) - (3, 25)] my_record;
+                    decl_context {
+                    }
+                }
+            }
+        }
+    }
+}

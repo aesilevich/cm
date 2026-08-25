@@ -46,7 +46,7 @@ set(cm_disabled_parse_tests
         template_dependent_inst             # dependent template instantiation is not implemented
         template_param_template             # template template parameters are not implemented
         typedef_qual                        # QualifiedTypeLoc is not implemented
-        typedef_record                      # QualifiedTypeLoc is not implemented
+        typedef_qual_record                 # QualifiedTypeLoc is not implemented
         var                                 # QualifiedTypeLoc is not implemented
         variadic_func                       # PackExpansionTypeLoc is not implemented
         variadic_templ_arg_pack             # type loc conversion without function body
