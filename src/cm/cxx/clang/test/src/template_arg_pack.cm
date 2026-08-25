@@ -1,0 +1,11 @@
+template struct str<type ... Args> {
+    injected struct str;
+};
+
+template_instantiation struct str<int, float> {
+    method str() -> void;
+    method str(str<int, float> &) -> void;
+    method str(str<int, float> &&) -> void;
+};
+
+var s: str<int, float>;

@@ -153,6 +153,14 @@ convert_template_arguments(converter_impl & conv,
             res.push_back(template_argument_desc{cm_templ, is_expansion});
             break;
         }
+        case ::clang::TemplateArgument::ArgKind::Pack: {
+            // flattening arguments of the pack into the list of template arguments
+            auto pack_args = convert_template_arguments(conv, targ.pack_elements());
+            for (auto && pack_arg : pack_args) {
+                res.push_back(pack_arg);
+            }
+            break;
+        }
         default:
             assert(false && "Unknown template argument type");
         }
