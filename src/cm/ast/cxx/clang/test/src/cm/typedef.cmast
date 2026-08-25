@@ -1,0 +1,8 @@
+source_file "typedef.cpp" {
+    decl_context {
+        typedef ["typedef.cpp": (4, 1) - (4, 20)] {
+            identifier ["typedef.cpp": (4, 13) - (4, 20)] my_type;
+            builtin_type_spec ["typedef.cpp": (4, 9) - (4, 9)] int;
+        }
+    }
+}

@@ -1,0 +1,1 @@
+typedef my_type = int const volatile;

@@ -1,2 +1,1 @@
 typedef my_type = int;
-typedef my_type_2 = my_type const volatile;
