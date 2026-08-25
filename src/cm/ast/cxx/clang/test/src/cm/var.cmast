@@ -1,0 +1,8 @@
+source_file "var.cpp" {
+    decl_context {
+        global_variable_decl ["var.cpp": (4, 1) - (4, 20)] {
+            identifier ["var.cpp": (4, 11) - (4, 17)] my_var;
+            builtin_type_spec ["var.cpp": (4, 7) - (4, 7)] int;
+        }
+    }
+}

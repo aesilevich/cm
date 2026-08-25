@@ -37,17 +37,14 @@ endforeach()
 set(cm_disabled_parse_tests
         decltype_type                       # DecltypeTypeLoc is not implemented
         dependent_name                      # type loc conversion without function body
-        partial_template_specialization     # QualifiedTypeLoc is not implemented
-        template_arg_decl                   # QualifiedTypeLoc is not implemented
+        partial_template_specialization     # type loc conversion without function body
+        template_arg_decl                   # ArrayTypeLoc is not implemented
         template_arg_expr                   # type loc conversion without function body
         template_arg_template               # template template parameters are not implemented
         template_arg_template_expansion     # template template parameters are not implemented
         template_class_specialization       # template specialization parsing is not implemented
         template_dependent_inst             # dependent template instantiation is not implemented
         template_param_template             # template template parameters are not implemented
-        typedef_qual                        # QualifiedTypeLoc is not implemented
-        typedef_qual_record                 # QualifiedTypeLoc is not implemented
-        var                                 # QualifiedTypeLoc is not implemented
         variadic_func                       # PackExpansionTypeLoc is not implemented
         variadic_templ_arg_pack             # type loc conversion without function body
     )

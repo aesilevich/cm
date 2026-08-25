@@ -1,0 +1,8 @@
+source_file "typedef_qual.cpp" {
+    decl_context {
+        typedef ["typedef_qual.cpp": (4, 1) - (4, 35)] {
+            identifier ["typedef_qual.cpp": (4, 28) - (4, 35)] my_type;
+            builtin_type_spec ["typedef_qual.cpp": (4, 24) - (4, 24)] int;
+        }
+    }
+}

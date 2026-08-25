@@ -585,6 +585,13 @@ ast_converter::convert_scope_spec(ast_node * parent,
 std::unique_ptr<scope_spec>
 ast_converter::convert_type_scope(ast_node * parent, const ::clang::TypeLoc & loc) {
 
+    // clang does not store any location information for type qualifiers, so
+    // qualifiers are ignored and the unqualified type location is converted
+    // (see #47 for more details)
+    if (auto qual_loc = loc.getAs<::clang::QualifiedTypeLoc>()) {
+        return convert_type_scope(parent, qual_loc.getUnqualifiedLoc());
+    }
+
     if (auto bt_loc = loc.getAs<::clang::BuiltinTypeLoc>()) {
         assert(false && "invalid scope type spec");
         return {};
@@ -992,6 +999,12 @@ ast_converter::convert_template_param(ast_node * parent,
 
 std::unique_ptr<type_spec>
 ast_converter::convert_type_spec(ast_node * parent, const ::clang::TypeLoc & loc) {
+
+    // clang does not store any location information for type qualifiers, so
+    // qualifiers are ignored and the unqualified type location is converted
+    if (auto qual_loc = loc.getAs<::clang::QualifiedTypeLoc>()) {
+        return convert_type_spec(parent, qual_loc.getUnqualifiedLoc());
+    }
 
     if (auto bt_loc = loc.getAs<::clang::BuiltinTypeLoc>()) {
         return convert_builtin_type_spec(parent, bt_loc);
