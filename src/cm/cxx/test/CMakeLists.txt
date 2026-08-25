@@ -16,4 +16,4 @@ if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
     target_link_libraries(cm-cxx-test PRIVATE rt)
 endif()
 
-add_test(NAME cm-test COMMAND cm-cxx-test)
+add_test(NAME cm-cxx-test COMMAND cm-cxx-test)

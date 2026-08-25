@@ -52,6 +52,15 @@ void print_template_instantiation_name(std::ostream & str, const template_instan
             }
         } else if (auto val_arg = dynamic_cast<const value_template_argument*>(arg)) {
             str << val_arg->val().str();
+            last_rangle = false;
+        } else if (auto templ_arg = dynamic_cast<const template_template_argument*>(arg)) {
+            print_context_entity_name(str, templ_arg->used_entity(), true);
+
+            if (templ_arg->is_expansion()) {
+                str << "...";
+            }
+
+            last_rangle = false;
         } else {
             assert(false && "unknown template argument type");
         }

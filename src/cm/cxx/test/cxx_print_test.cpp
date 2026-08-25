@@ -7,8 +7,9 @@
 /// \file cxx_print_test.cpp
 /// Contains unit tests for pretty printing of declarations for C++ language
 
-#include "../code_model.hpp"
-#include "../cxx/print.hpp"
+#include "pch.hpp"
+#include "cm/code_model.hpp"
+#include "cm/cxx/print.hpp"
 #include <sstream>
 #include <boost/test/unit_test.hpp>
 
@@ -288,6 +289,21 @@ BOOST_AUTO_TEST_CASE(templ_func) {
 
     cxx::print_entity(str, func);
     BOOST_CHECK_EQUAL(str.str(), "void foo<int>()");
+}
+
+
+/// Tests printing template function with template template argument
+BOOST_AUTO_TEST_CASE(templ_func_templ_arg) {
+    auto vec = cm.create_named_entity<template_record>("vector", record_kind::struct_);
+    vec->add_type_template_param("T");
+
+    auto templ = cm.create_template_function("foo");
+    templ->add_template_template_param("C");
+    auto func = templ->create_instantiation(template_argument_desc{vec});
+    func->set_ret_type(cm.bt_void());
+
+    cxx::print_entity(str, func);
+    BOOST_CHECK_EQUAL(str.str(), "void foo<vector>()");
 }
 
 
