@@ -1,0 +1,10 @@
+template struct str<type ... Args> {
+    injected struct str;
+};
+
+template struct str2<type ... Args> {
+    injected struct str2;
+    typedef type = str<Args ...>;
+};
+
+template_dependent_instantiation struct str<Args ...>;

@@ -17,6 +17,7 @@
 #include "function_type_converter.hpp"
 #include "log.hpp"
 #include "lvalue_reference_type_converter.hpp"
+#include "pack_expansion_type_converter.hpp"
 #include "rvalue_reference_type_converter.hpp"
 #include "pointer_type_converter.hpp"
 #include "subst_template_type_param_type_converter.hpp"
@@ -38,6 +39,7 @@ class types_converter {
     using type_converters = std::tuple <
         builtin_type_converter,
         pointer_type_converter,
+        pack_expansion_type_converter,
         lvalue_reference_type_converter,
         rvalue_reference_type_converter,
         function_type_converter,

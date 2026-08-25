@@ -35,6 +35,7 @@ add_library(cm-cxx-clang
             namespace_converter.cpp
             namespace_converter.hpp
             pch.hpp
+            pack_expansion_type_converter.hpp
             pointer_type_converter.hpp
             record_converter.cpp
             record_converter.hpp

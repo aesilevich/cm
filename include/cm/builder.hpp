@@ -703,6 +703,11 @@ public:
         return cm_.get_or_create_ptr_type(base);
     }
 
+    /// Gets or creates pack expansion type with specified pattern
+    pack_expansion_type * pack_type(const qual_type & pattern) {
+        return cm_.get_or_create_pack_expansion_type(pattern);
+    }
+
     /// Gets or creates reference type with specifeid base
     lvalue_reference_type * rtype(const qual_type & base) {
         return cm_.get_or_create_lvalue_ref_type(base);

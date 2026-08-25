@@ -185,6 +185,10 @@ void code_model::replace_type(type_t * src, type_t * dst) {
             auto new_base = ref_type->base().replaced_type(src, dst);
             auto new_ref = get_or_create_lvalue_ref_type(new_base);
             replace_type(ref_type, new_ref);
+        } else if (auto pack_type = dynamic_cast<pack_expansion_type*>(use)) {
+            auto new_pattern = pack_type->pattern().replaced_type(src, dst);
+            auto new_pack = get_or_create_pack_expansion_type(new_pattern);
+            replace_type(pack_type, new_pack);
         } else if (auto arr_type = dynamic_cast<array_type*>(use)) {
             auto new_arr = get_or_create_arr_type(dst, arr_type->size());
             replace_type(arr_type, new_arr);
@@ -221,6 +225,7 @@ void code_model::replace_type(type_t * src, type_t * dst) {
             dynamic_cast<lvalue_reference_type*>(use) ||
             dynamic_cast<mem_ptr_type*>(use) ||
             dynamic_cast<array_type*>(use) ||
+            dynamic_cast<pack_expansion_type*>(use) ||
             dynamic_cast<function_type*>(use)) {
 
             ++use_it;
@@ -269,6 +274,7 @@ void code_model::remove_unused_composite_types() {
         removed |= func_types_.remove_if(pred);
         removed |= mem_ptr_types_.remove_if(pred);
         removed |= vec_types_.remove_if(pred);
+        removed |= pack_expansion_types_.remove_if(pred);
     }
 }
 
@@ -290,6 +296,8 @@ void code_model::remove_type(type_t * type) {
         func_types_.erase(func_type);
     } else if (auto mtype = type->cast<mem_ptr_type>()) {
         mem_ptr_types_.erase(mtype);
+    } else if (auto pack_type = type->cast<pack_expansion_type>()) {
+        pack_expansion_types_.erase(pack_type);
     } else if(auto decl = type->cast<context_type>()) {
 
         // type is declared in some declaration context
@@ -402,6 +410,8 @@ void code_model::remove_entity_and_uses(entity * ent) {
             func_types_.erase(func_type);
         } else if (auto mtype = type->cast<mem_ptr_type>()) {
             mem_ptr_types_.erase(mtype);
+        } else if (auto pack_type = type->cast<pack_expansion_type>()) {
+            pack_expansion_types_.erase(pack_type);
         } else {
             assert(false && "don't know how to remove type");
         }

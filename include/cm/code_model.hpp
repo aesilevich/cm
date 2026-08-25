@@ -18,6 +18,7 @@
 #include "mem_ptr_type.hpp"
 #include "named_type.hpp"
 #include "namespace.hpp"
+#include "pack_expansion_type.hpp"
 #include "pointer_type.hpp"
 #include "qual_type.hpp"
 #include "record_type.hpp"
@@ -298,6 +299,11 @@ public:
         return ptr_types_.get_or_create(pointee);
     }
 
+    /// Returns existing or creates new pack expansion type
+    pack_expansion_type * get_or_create_pack_expansion_type(const qual_type & pattern) {
+        return pack_expansion_types_.get_or_create(pattern);
+    }
+
     /// Returns existing or creates new array type
     array_type * get_or_create_arr_type(type_t * base, uint64_t sz) {
         return arr_types_.get_or_create(base, sz);
@@ -358,6 +364,9 @@ public:
     /// Returns range of all pointer types
     auto ptr_types() { return ptr_types_.types(); }
 
+    /// Returns range of all pack expansion types
+    auto pack_expansion_types() { return pack_expansion_types_.types(); }
+
     /// Returns range of all lvalue reference types
     auto lvalue_ref_types() { return lvalue_ref_types_.types(); }
 
@@ -389,13 +398,15 @@ public:
         auto arrs = arr_types() | std::ranges::views::transform(cast_fn_t());
         auto funcs = func_types() | std::ranges::views::transform(cast_fn_t());
         auto mem_ptrs = mem_ptr_types() | std::ranges::views::transform(cast_fn_t());
+        auto packs = pack_expansion_types() | std::ranges::views::transform(cast_fn_t());
 
         auto tmp1 = ranges::views::concat(ptrs, lrefs);
         auto tmp2 = ranges::views::concat(tmp1, rrefs);
         auto tmp3 = ranges::views::concat(tmp2, arrs);
         auto tmp4 = ranges::views::concat(tmp3, funcs);
         auto tmp5 = ranges::views::concat(tmp4, mem_ptrs);
-        return tmp5;
+        auto tmp6 = ranges::views::concat(tmp5, packs);
+        return tmp6;
     }
 
     /// Removes specified type. Type must have no uses
@@ -439,6 +450,9 @@ private:
 
     /// Map of pointer types
     composite_type_map<const_qual_type, pointer_type> ptr_types_;
+
+    /// Map of pack expansion types
+    composite_type_map<const_qual_type, pack_expansion_type> pack_expansion_types_;
 
     /// Map of lvalue reference types
     composite_type_map<const_qual_type, lvalue_reference_type> lvalue_ref_types_;

@@ -1,0 +1,1 @@
+template func foo<type ... Args1, type ... Args2>(args1: Args1 && ..., args2: Args2 && ...) -> void;
