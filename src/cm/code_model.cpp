@@ -147,8 +147,20 @@ code_model::~code_model() {
         remove_entity_and_uses(rvalue_ref_types_.first());
     }
 
-    while (!arr_types_.empty()) {
-        remove_entity_and_uses(arr_types_.first());
+    while (!fixed_arr_types_.empty()) {
+        remove_entity_and_uses(fixed_arr_types_.first());
+    }
+
+    while (!incomplete_arr_types_.empty()) {
+        remove_entity_and_uses(incomplete_arr_types_.first());
+    }
+
+    while (!dynamic_arr_types_.empty()) {
+        remove_entity_and_uses(dynamic_arr_types_.first());
+    }
+
+    while (!dependent_arr_types_.empty()) {
+        remove_entity_and_uses(dependent_arr_types_.first());
     }
 
     while (!func_types_.empty()) {
@@ -189,8 +201,17 @@ void code_model::replace_type(type_t * src, type_t * dst) {
             auto new_pattern = pack_type->pattern().replaced_type(src, dst);
             auto new_pack = get_or_create_pack_expansion_type(new_pattern);
             replace_type(pack_type, new_pack);
-        } else if (auto arr_type = dynamic_cast<array_type*>(use)) {
-            auto new_arr = get_or_create_arr_type(dst, arr_type->size());
+        } else if (auto arr_type = dynamic_cast<fixed_array_type*>(use)) {
+            auto new_arr = get_or_create_fixed_arr_type(dst, arr_type->size());
+            replace_type(arr_type, new_arr);
+        } else if (auto arr_type = dynamic_cast<incomplete_array_type*>(use)) {
+            auto new_arr = get_or_create_incomplete_arr_type(dst);
+            replace_type(arr_type, new_arr);
+        } else if (auto arr_type = dynamic_cast<dynamic_array_type*>(use)) {
+            auto new_arr = get_or_create_dynamic_arr_type(dst, arr_type->size());
+            replace_type(arr_type, new_arr);
+        } else if (auto arr_type = dynamic_cast<dependent_sized_array_type*>(use)) {
+            auto new_arr = get_or_create_dependent_arr_type(dst, arr_type->size());
             replace_type(arr_type, new_arr);
         } else if (auto func_type = dynamic_cast<function_type*>(use)) {
             auto new_ret = func_type->ret_type().replaced_type(src, dst);
@@ -270,7 +291,10 @@ void code_model::remove_unused_composite_types() {
         removed |= ptr_types_.remove_if(pred);
         removed |= lvalue_ref_types_.remove_if(pred);
         removed |= rvalue_ref_types_.remove_if(pred);
-        removed |= arr_types_.remove_if(pred);
+        removed |= fixed_arr_types_.remove_if(pred);
+        removed |= incomplete_arr_types_.remove_if(pred);
+        removed |= dynamic_arr_types_.remove_if(pred);
+        removed |= dependent_arr_types_.remove_if(pred);
         removed |= func_types_.remove_if(pred);
         removed |= mem_ptr_types_.remove_if(pred);
         removed |= vec_types_.remove_if(pred);
@@ -288,8 +312,14 @@ void code_model::remove_type(type_t * type) {
         lvalue_ref_types_.erase(ref_type);
     } else if (auto ref_type = type->cast<rvalue_reference_type>()) {
         rvalue_ref_types_.erase(ref_type);
-    } else if (auto arr_type = type->cast<array_type>()) {
-        arr_types_.erase(arr_type);
+    } else if (auto arr_type = type->cast<fixed_array_type>()) {
+        fixed_arr_types_.erase(arr_type);
+    } else if (auto arr_type = type->cast<incomplete_array_type>()) {
+        incomplete_arr_types_.erase(arr_type);
+    } else if (auto arr_type = type->cast<dynamic_array_type>()) {
+        dynamic_arr_types_.erase(arr_type);
+    } else if (auto arr_type = type->cast<dependent_sized_array_type>()) {
+        dependent_arr_types_.erase(arr_type);
     } else if (auto vec_type = type->cast<vector_type>()) {
         vec_types_.erase(vec_type);
     } else if (auto func_type = type->cast<function_type>()) {
@@ -402,8 +432,14 @@ void code_model::remove_entity_and_uses(entity * ent) {
             lvalue_ref_types_.erase(ref_type);
         } else if (auto ref_type = type->cast<rvalue_reference_type>()) {
             rvalue_ref_types_.erase(ref_type);
-        } else if (auto arr_type = type->cast<array_type>()) {
-            arr_types_.erase(arr_type);
+        } else if (auto arr_type = type->cast<fixed_array_type>()) {
+            fixed_arr_types_.erase(arr_type);
+        } else if (auto arr_type = type->cast<incomplete_array_type>()) {
+            incomplete_arr_types_.erase(arr_type);
+        } else if (auto arr_type = type->cast<dynamic_array_type>()) {
+            dynamic_arr_types_.erase(arr_type);
+        } else if (auto arr_type = type->cast<dependent_sized_array_type>()) {
+            dependent_arr_types_.erase(arr_type);
         } else if (auto vec_type = type->cast<vector_type>()) {
             vec_types_.erase(vec_type);
         } else if (auto func_type = type->cast<function_type>()) {

@@ -693,9 +693,25 @@ public:
         return cm_.get_or_create_func_type(ret_type, std::forward<Params>(params)...);
     }
 
-    /// Gets or creates array type with specified elemtn type and size
-    array_type * atype(type_t * elt_type, size_t sz = 0) {
-        return cm_.get_or_create_arr_type(elt_type, sz);
+    /// Gets or creates array type with specified element type and constant size
+    fixed_array_type * atype(type_t * elt_type, uint64_t sz) {
+        return cm_.get_or_create_fixed_arr_type(elt_type, sz);
+    }
+
+    /// Gets or creates array type with specified element type and no size
+    incomplete_array_type * atype(type_t * elt_type) {
+        return cm_.get_or_create_incomplete_arr_type(elt_type);
+    }
+
+    /// Gets or creates variable length array type with specified element type and size
+    dynamic_array_type * dyn_atype(type_t * elt_type, const value & sz) {
+        return cm_.get_or_create_dynamic_arr_type(elt_type, sz);
+    }
+
+    /// Gets or creates array type with specified element type and size depending
+    /// on template parameters
+    dependent_sized_array_type * dep_atype(type_t * elt_type, const value & sz) {
+        return cm_.get_or_create_dependent_arr_type(elt_type, sz);
     }
 
     /// Gets or creates pointer type with specifeid base

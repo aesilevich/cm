@@ -304,9 +304,25 @@ public:
         return pack_expansion_types_.get_or_create(pattern);
     }
 
-    /// Returns existing or creates new array type
-    array_type * get_or_create_arr_type(type_t * base, uint64_t sz) {
-        return arr_types_.get_or_create(base, sz);
+    /// Returns existing or creates new array type with constant size
+    fixed_array_type * get_or_create_fixed_arr_type(type_t * base, uint64_t sz) {
+        return fixed_arr_types_.get_or_create(base, sz);
+    }
+
+    /// Returns existing or creates new array type with no size
+    incomplete_array_type * get_or_create_incomplete_arr_type(type_t * base) {
+        return incomplete_arr_types_.get_or_create(base);
+    }
+
+    /// Returns existing or creates new variable length array type
+    dynamic_array_type * get_or_create_dynamic_arr_type(type_t * base, const value & sz) {
+        return dynamic_arr_types_.get_or_create(base, sz);
+    }
+
+    /// Returns existing or creates new array type with size depending on template parameters
+    dependent_sized_array_type * get_or_create_dependent_arr_type(type_t * base,
+                                                                  const value & sz) {
+        return dependent_arr_types_.get_or_create(base, sz);
     }
 
     /// Returns existing or creates new vector type
@@ -373,8 +389,17 @@ public:
     /// Returns range of all rvalue reference types
     auto rvalue_ref_types() { return rvalue_ref_types_.types(); }
 
-    /// Returns range of all array types
-    auto arr_types() { return arr_types_.types(); }
+    /// Returns range of all array types with constant size
+    auto fixed_arr_types() { return fixed_arr_types_.types(); }
+
+    /// Returns range of all array types with no size
+    auto incomplete_arr_types() { return incomplete_arr_types_.types(); }
+
+    /// Returns range of all variable length array types
+    auto dynamic_arr_types() { return dynamic_arr_types_.types(); }
+
+    /// Returns range of all array types with size depending on template parameters
+    auto dependent_arr_types() { return dependent_arr_types_.types(); }
 
     /// Returns range of all function types
     auto func_types() { return func_types_.types(); }
@@ -395,7 +420,10 @@ public:
         auto ptrs = ptr_types() | std::ranges::views::transform(cast_fn_t());
         auto lrefs = lvalue_ref_types() | std::ranges::views::transform(cast_fn_t());
         auto rrefs = rvalue_ref_types() | std::ranges::views::transform(cast_fn_t());
-        auto arrs = arr_types() | std::ranges::views::transform(cast_fn_t());
+        auto arrs = fixed_arr_types() | std::ranges::views::transform(cast_fn_t());
+        auto iarrs = incomplete_arr_types() | std::ranges::views::transform(cast_fn_t());
+        auto dyarrs = dynamic_arr_types() | std::ranges::views::transform(cast_fn_t());
+        auto dparrs = dependent_arr_types() | std::ranges::views::transform(cast_fn_t());
         auto funcs = func_types() | std::ranges::views::transform(cast_fn_t());
         auto mem_ptrs = mem_ptr_types() | std::ranges::views::transform(cast_fn_t());
         auto packs = pack_expansion_types() | std::ranges::views::transform(cast_fn_t());
@@ -406,7 +434,10 @@ public:
         auto tmp4 = ranges::views::concat(tmp3, funcs);
         auto tmp5 = ranges::views::concat(tmp4, mem_ptrs);
         auto tmp6 = ranges::views::concat(tmp5, packs);
-        return tmp6;
+        auto tmp7 = ranges::views::concat(tmp6, iarrs);
+        auto tmp8 = ranges::views::concat(tmp7, dyarrs);
+        auto tmp9 = ranges::views::concat(tmp8, dparrs);
+        return tmp9;
     }
 
     /// Removes specified type. Type must have no uses
@@ -460,8 +491,17 @@ private:
     /// Map of rvalue reference types
     composite_type_map<const_qual_type, rvalue_reference_type> rvalue_ref_types_;
 
-    /// Map of array types
-    composite_type_map<array_type_id, array_type> arr_types_;
+    /// Map of array types with constant size
+    composite_type_map<fixed_array_type_id, fixed_array_type> fixed_arr_types_;
+
+    /// Map of array types with no size
+    composite_type_map<incomplete_array_type_id, incomplete_array_type> incomplete_arr_types_;
+
+    /// Map of variable length array types
+    composite_type_map<value_array_type_id, dynamic_array_type> dynamic_arr_types_;
+
+    /// Map of array types with size depending on template parameters
+    composite_type_map<value_array_type_id, dependent_sized_array_type> dependent_arr_types_;
 
     /// Map of vector types
     composite_type_map<vector_type_id, vector_type> vec_types_;

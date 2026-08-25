@@ -1,0 +1,4 @@
+template struct my_record<var N: int> {
+    injected struct my_record;
+    field my_array: int[N];
+};

@@ -70,7 +70,7 @@ uint64_t debug_info::find_type_size(const const_qual_type & t) const {
         return type_size(et->base());
     } else if (auto tt = t.cast<typedef_type>()) {
         return type_size(tt->base());
-    } else if (auto at = t.cast<array_type>()) {
+    } else if (auto at = t.cast<fixed_array_type>()) {
         return type_size(at->base()) * at->size();
     } else if (auto vt = t.cast<vector_type>()) {
         return type_size(vt->base()) * vt->size();
@@ -89,7 +89,7 @@ uint64_t debug_info::type_size(const const_qual_type & t) const {
     auto sz = find_type_size(t);
     if (sz == 0) {
         auto atype = t.cast<array_type>();
-        assert(atype && atype->size() == 0 && "debug info not found");
+        assert(atype && !atype->is<fixed_array_type>() && "debug info not found");
     }
 
     return sz;

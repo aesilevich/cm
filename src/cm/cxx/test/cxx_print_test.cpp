@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(record_type_name_write_scope) {
 
 /// Tests printing array type
 BOOST_AUTO_TEST_CASE(array_type_name_write) {
-    auto arr = cm.get_or_create_arr_type(cm.bt_int(), 10);
+    auto arr = cm.get_or_create_fixed_arr_type(cm.bt_int(), 10);
     cxx::print_type(str, arr);
     BOOST_CHECK_EQUAL(str.str(), "int [10]");
 }
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(array_type_name_write) {
 /// Tests printing qualified array of user defined types
 BOOST_AUTO_TEST_CASE(array_type_write_const_user) {
     auto rec = cm.create_named_record("cls");
-    auto arr = cm.get_or_create_arr_type(rec, 10);
+    auto arr = cm.get_or_create_fixed_arr_type(rec, 10);
     qual_type qt{arr, true};
     cxx::print_type(str, qt);
     BOOST_CHECK_EQUAL(str.str(), "const cls [10]");
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(array_type_write_const_user) {
 
 /// Tests printing qualified array of builtin types
 BOOST_AUTO_TEST_CASE(array_type_write_const_builtin) {
-    auto arr = cm.get_or_create_arr_type(cm.bt_int(), 10);
+    auto arr = cm.get_or_create_fixed_arr_type(cm.bt_int(), 10);
     qual_type qt{arr, true};
     cxx::print_type(str, qt);
     BOOST_CHECK_EQUAL(str.str(), "int const [10]");
@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(pointer_type_name_write) {
 
 /// Tests printing pointer to array type name
 BOOST_AUTO_TEST_CASE(pointer_type_name_write_array) {
-    auto arr = cm.get_or_create_arr_type(cm.bt_int(), 20);
+    auto arr = cm.get_or_create_fixed_arr_type(cm.bt_int(), 20);
     auto ptr = cm.get_or_create_ptr_type(arr);
     cxx::print_type(str, ptr);
     BOOST_CHECK_EQUAL(str.str(), "int (*)[20]");
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(pointer_type_name_write_array) {
 /// Tests printing pointer to qualified array of user defined types
 BOOST_AUTO_TEST_CASE(pointer_type_name_write_array_const_user) {
     auto rec = cm.create_named_record("cls");
-    auto arr = cm.get_or_create_arr_type(rec, 20);
+    auto arr = cm.get_or_create_fixed_arr_type(rec, 20);
     auto ptr = cm.get_or_create_ptr_type({arr, true});
     cxx::print_type(str, ptr);
     BOOST_CHECK_EQUAL(str.str(), "const cls (*)[20]");
@@ -118,7 +118,7 @@ BOOST_AUTO_TEST_CASE(pointer_type_name_write_array_const_user) {
 
 /// Tests printing pointer to qualified array of builtin types
 BOOST_AUTO_TEST_CASE(pointer_type_name_write_array_const_builtin) {
-    auto arr = cm.get_or_create_arr_type(cm.bt_int(), 20);
+    auto arr = cm.get_or_create_fixed_arr_type(cm.bt_int(), 20);
     auto ptr = cm.get_or_create_ptr_type({arr, true});
     cxx::print_type(str, ptr);
     BOOST_CHECK_EQUAL(str.str(), "int const (*)[20]");
@@ -202,9 +202,9 @@ BOOST_AUTO_TEST_CASE(mem_func_ptr_type_name_write) {
 
 /// Tests printing pointer to array of poiners to arrays
 BOOST_AUTO_TEST_CASE(write_ptr_arr_ptr_arr) {
-    auto ar = cm.get_or_create_arr_type(cm.bt_int(), 30);
+    auto ar = cm.get_or_create_fixed_arr_type(cm.bt_int(), 30);
     auto ptr = cm.get_or_create_ptr_type(ar);
-    auto ar2 = cm.get_or_create_arr_type(ptr, 20);
+    auto ar2 = cm.get_or_create_fixed_arr_type(ptr, 20);
     auto ptr2 = cm.get_or_create_ptr_type(ar2);
 
     cxx::print_type(str, ptr2);
@@ -262,7 +262,7 @@ BOOST_AUTO_TEST_CASE(template_type_name_write_2) {
 BOOST_AUTO_TEST_CASE(func_ptr_array) {
     auto ftype = cm.get_or_create_func_type(cm.bt_void());
     auto fptr_type = cm.get_or_create_ptr_type(ftype);
-    auto arr_type = cm.get_or_create_arr_type(fptr_type, 10);
+    auto arr_type = cm.get_or_create_fixed_arr_type(fptr_type, 10);
 
     cxx::print_type(str, arr_type);
     BOOST_CHECK_EQUAL(str.str(), "void (* [10])()");

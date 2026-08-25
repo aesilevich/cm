@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(test_create_typedef_global) {
 
 /// Tests creating array type
 BOOST_AUTO_TEST_CASE(create_arr) {
-    auto at = cm.get_or_create_arr_type(cm.bt_int(), 20);
+    auto at = cm.get_or_create_fixed_arr_type(cm.bt_int(), 20);
     BOOST_REQUIRE(at);
     BOOST_CHECK(at->base() == cm.bt_int());
     BOOST_CHECK_EQUAL(at->size(), 20);
@@ -153,16 +153,16 @@ BOOST_AUTO_TEST_CASE(create_arr) {
 
 /// Tests creating existing array type
 BOOST_AUTO_TEST_CASE(create_arr_existing) {
-    auto at = cm.get_or_create_arr_type(cm.bt_int(), 20);
-    auto at2 = cm.get_or_create_arr_type(cm.bt_int(), 20);
+    auto at = cm.get_or_create_fixed_arr_type(cm.bt_int(), 20);
+    auto at2 = cm.get_or_create_fixed_arr_type(cm.bt_int(), 20);
     BOOST_CHECK(at == at2);
 }
 
 
 /// Tests creating array types with different sizes
 BOOST_AUTO_TEST_CASE(create_arr_diff_size) {
-    auto at = cm.get_or_create_arr_type(cm.bt_int(), 20);
-    auto at2 = cm.get_or_create_arr_type(cm.bt_int(), 30);
+    auto at = cm.get_or_create_fixed_arr_type(cm.bt_int(), 20);
+    auto at2 = cm.get_or_create_fixed_arr_type(cm.bt_int(), 30);
     BOOST_CHECK(at != at2);
     BOOST_REQUIRE(at2);
     BOOST_CHECK_EQUAL(at2->size(), 30);

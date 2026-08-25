@@ -138,8 +138,10 @@ static void print_type_decl_prefix(std::ostream & str, const type_t * t, bool en
         if (end_sp) {
             str << ' ';
         }
-    } else if (auto a_t = dynamic_cast<const array_or_vector_type*>(t)) {
+    } else if (auto a_t = dynamic_cast<const array_type*>(t)) {
         print_type_decl_prefix(str, a_t->base(), end_sp);
+    } else if (auto v_t = dynamic_cast<const vector_type*>(t)) {
+        print_type_decl_prefix(str, v_t->base(), end_sp);
     } else if (auto f_t = dynamic_cast<const function_type*>(t)) {
         print_qual_type_decl_prefix(str, f_t->ret_type(), end_sp);
     } else if (auto m_t = dynamic_cast<const mem_ptr_type*>(t)) {
@@ -189,8 +191,10 @@ static void print_type_decl_suffix(std::ostream & str, const type_t * t, bool p_
 
         str << '[';
 
-        if (a_t->size() != SIZE_MAX) {
-            str << a_t->size();
+        if (auto f_t = dynamic_cast<const fixed_array_type*>(a_t)) {
+            str << f_t->size();
+        } else if (auto v_t = dynamic_cast<const value_sized_array_type*>(a_t)) {
+            str << v_t->size().str();
         }
 
         str << ']';
