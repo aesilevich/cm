@@ -130,7 +130,7 @@ void fill_record_contents(converter_impl & conv,
     // converting record members
     for (auto && decl : clang_record_decl->decls()) {
         // skipping "injected class name" records
-        if (auto rec_decl = ::clang::dyn_cast<::clang::RecordDecl>(decl)) {
+        if (auto rec_decl = ::clang::dyn_cast<::clang::CXXRecordDecl>(decl)) {
             if (rec_decl->isInjectedClassName()) {
                 continue;
             }

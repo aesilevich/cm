@@ -2,6 +2,9 @@ template func foo<type T>(x: T) -> void;
 
 struct str {
     method ~str() -> void;
+    method str() -> void;
+    method str(str &) -> void;
+    method str(str &&) -> void;
 };
 
 template_instantiation func foo<str>(x: str) -> void;

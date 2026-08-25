@@ -6,6 +6,9 @@ template struct str<type T> {
 
 template_instantiation struct str<int> {
     method ~str() -> void;
+    method str() -> void;
+    method str(str<int> &) -> void;
+    method str(str<int> &&) -> void;
 };
 
 template_instantiation func foo<str<int>>(x: str<int>) -> void;

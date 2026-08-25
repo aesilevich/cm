@@ -14,7 +14,6 @@
 #include "converter_impl.hpp"
 #include "decltype_type_converter.hpp"
 #include "dependent_type_converter.hpp"
-#include "elaborated_type_converter.hpp"
 #include "function_type_converter.hpp"
 #include "log.hpp"
 #include "lvalue_reference_type_converter.hpp"
@@ -43,7 +42,6 @@ class types_converter {
         rvalue_reference_type_converter,
         function_type_converter,
         array_type_converter,
-        elaborated_type_converter,
         type_template_parameter_converter,
         template_specialization_type_converter,
         subst_template_type_param_type_converter,

@@ -140,7 +140,7 @@ private:
     bool TraverseFieldDecl(::clang::FieldDecl * clang_field_decl);
 
     /// Traverses type specifier
-    bool TraverseTypeLoc(::clang::TypeLoc loc);
+    bool TraverseTypeLoc(::clang::TypeLoc loc, bool traverse_qualifier = true);
 
     bool VisitNestedNameSpecifierLoc(::clang::NestedNameSpecifierLoc loc);
 
@@ -174,7 +174,6 @@ private:
 
     /// Converts nested name specifier location info to scope specifier
     std::unique_ptr<scope_spec> convert_scope_spec(ast_node * parent,
-                                                   const ::clang::NestedNameSpecifier * nss,
                                                    const ::clang::NestedNameSpecifierLoc & nss_loc);
 
     /// Converts type location info to scope specifier
@@ -227,10 +226,6 @@ private:
     /// Converts record type spec
     std::unique_ptr<type_spec>
     convert_record_type_spec(ast_node * parent, const ::clang::TagTypeLoc & loc);
-
-    /// Converts elaborated type specified
-    std::unique_ptr<type_spec> convert_elaborated_type_spec(ast_node * parent,
-                                                            const ::clang::ElaboratedTypeLoc & loc);
 
     /// Converts template parameter type specifier
     std::unique_ptr<template_param_type_spec>

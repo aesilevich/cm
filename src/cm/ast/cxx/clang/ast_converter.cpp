@@ -319,7 +319,7 @@ bool ast_converter::TraverseFieldDecl(::clang::FieldDecl * clang_field_decl) {
 void debug_break() {
 }
 
-bool ast_converter::TraverseTypeLoc(::clang::TypeLoc loc) {
+bool ast_converter::TraverseTypeLoc(::clang::TypeLoc loc, bool traverse_qualifier) {
     assert(func_body_ != nullptr && "can't convert type loc without function body");
     func_body_->add_child(convert_type_spec(ctx_, loc));
     return true;
@@ -466,10 +466,10 @@ ast_converter::convert_record_decl(ast_node * parent, ::clang::CXXRecordDecl * c
     }
 
     // converting record scope
-    if (auto nns = clang_decl->getQualifier()) {
+    if (clang_decl->getQualifier()) {
         auto nns_loc = clang_decl->getQualifierLoc();
         assert(nns_loc && "can't get nested named specifier location");
-        rec_decl->set_scope(convert_scope_spec(rec_decl.get(), nns, nns_loc));
+        rec_decl->set_scope(convert_scope_spec(rec_decl.get(), nns_loc));
     }
 
     // traversing record contents
@@ -509,8 +509,8 @@ void ast_converter::convert_named_decl(named_decl * decl,
     decl->set_name(convert_name(decl, clang_decl));
 
     // converting declaration scope
-    if (auto qual = clang_decl->getQualifier()) {
-        auto scope = convert_scope_spec(decl, qual, clang_decl->getQualifierLoc());
+    if (clang_decl->getQualifier()) {
+        auto scope = convert_scope_spec(decl, clang_decl->getQualifierLoc());
         decl->set_scope(std::move(scope));
     }
 }
@@ -556,33 +556,25 @@ void ast_converter::convert_functional_decl(function * func,
 
 std::unique_ptr<scope_spec>
 ast_converter::convert_scope_spec(ast_node * parent,
-                                  const ::clang::NestedNameSpecifier * nns,
                                   const ::clang::NestedNameSpecifierLoc & nns_loc) {
-
-    if (auto nns2 = nns_loc.getNestedNameSpecifier()) {
-        std::cout << std::endl;
-    }
 
     // TODO:
     // nns_loc.getPrefix() returns location info for scope of the nns_loc scope!!!
 
-    if (auto ident = nns->getAsIdentifier()) {
-        std::cout << "IDENTIFIER: " << ident->getName().str() << std::endl;
-        assert(false && "don't know how to convert identitifers");
-        return {};
-    } else if (auto ns = nns->getAsNamespace()) {
+    if (auto ns_and_prefix = nns_loc.getAsNamespaceAndPrefix()) {
+        auto ns = ::clang::dyn_cast<::clang::NamespaceDecl>(ns_and_prefix.Namespace);
+
+        // TODO: add namespace aliases support in code model
+        assert(ns != nullptr && "NYI");
+
         auto cm_ns = cm_conv_.get_decl_entity_as<namespace_>(ns);
         auto res = std::make_unique<namespace_scope_spec>(parent);
         res->set_entity(cm_ns);
         res->set_source_range(convert_source_range(nns_loc.getSourceRange()));
         res->set_name(ns->getName().str(), convert_source_range(nns_loc.getLocalSourceRange()));
         return res;
-    } else if (auto ns_alias = nns->getAsNamespaceAlias()) {
-        // TODO: add namespace aliases support in code model
-        assert(false && "NYI");
-        return {};
-    } else if (auto type = nns->getAsType()) {
-        return convert_type_scope(parent, nns_loc.getTypeLoc());
+    } else if (auto type_loc = nns_loc.getAsTypeLoc()) {
+        return convert_type_scope(parent, type_loc);
     } else {
         assert(false && "unknown nested name specified kind");
         return {};
@@ -678,13 +670,7 @@ ast_converter::convert_type_scope(ast_node * parent, const ::clang::TypeLoc & lo
     } else if (auto t_loc = loc.getAs<::clang::DeducedTemplateSpecializationTypeLoc>()) {
         assert(false && "NYI");
         return {};
-    } else if (auto e_loc = loc.getAs<::clang::ElaboratedTypeLoc>()) {
-        assert(false && "NYI");
-        return {};
     } else if (auto dn_loc = loc.getAs<::clang::DependentNameTypeLoc>()) {
-        assert(false && "NYI");
-        return {};
-    } else if (auto dspec_loc = loc.getAs<::clang::DependentTemplateSpecializationTypeLoc>()) {
         assert(false && "NYI");
         return {};
     } else if (auto pack_loc = loc.getAs<::clang::PackExpansionTypeLoc>()) {
@@ -899,30 +885,32 @@ ast_converter::convert_template_subst_type_spec(ast_node * parent,
     auto clang_decl = loc.getType()->getAsCXXRecordDecl();
     auto ent = cm_conv_.get_decl_entity_as<context_entity>(clang_decl);
 
+    std::unique_ptr<template_substitution_type_spec> spec;
+
     if (auto inst = dynamic_cast<template_record_instantiation_type*>(ent)) {
         // template record instantiation
 
         // creating template instantiation specifier
-        auto spec = std::make_unique<template_record_instantiation_type_spec>(parent);
-        spec->set_entity(inst);
-        spec->set_source_range(convert_source_range(loc.getSourceRange()));
+        auto inst_spec = std::make_unique<template_record_instantiation_type_spec>(parent);
+        inst_spec->set_entity(inst);
+        inst_spec->set_source_range(convert_source_range(loc.getSourceRange()));
 
         // converting template name and arguments for specifier
-        convert_template_and_arguments(loc, spec.get(), inst->templ());
+        convert_template_and_arguments(loc, inst_spec.get(), inst->templ());
 
-        return spec;
+        spec = std::move(inst_spec);
     } else if (auto rec = dynamic_cast<template_record*>(ent)) {
         // template record type itself inside template definition
 
         // creating template instantiation specifier
-        auto spec = std::make_unique<template_record_type_spec>(parent);
-        spec->set_entity(rec->this_type());
-        spec->set_source_range(convert_source_range(loc.getSourceRange()));
+        auto rec_spec = std::make_unique<template_record_type_spec>(parent);
+        rec_spec->set_entity(rec->this_type());
+        rec_spec->set_source_range(convert_source_range(loc.getSourceRange()));
 
         // converting template name and arguments for specifier
-        convert_template_and_arguments(loc, spec.get(), rec);
+        convert_template_and_arguments(loc, rec_spec.get(), rec);
 
-        return spec;
+        spec = std::move(rec_spec);
     } else {
         std::cerr << "ENT: ";
         ent->print_desc(std::cerr);
@@ -930,6 +918,19 @@ ast_converter::convert_template_subst_type_spec(ast_node * parent,
         assert(false && "unknown template specialization type entity");
         return {};
     }
+
+    // converting template scope. Template name is qualified with scope, not the type
+    // specifier itself, because template name is not a type
+    if (auto qloc = loc.getQualifierLoc(); qloc.hasQualifier()) {
+        auto scope = convert_scope_spec(spec.get(), qloc);
+
+        // adjusting template specifier range with qualifier
+        spec->templ()->set_source_range_start(scope->source_range().range().start());
+
+        spec->templ()->set_scope(std::move(scope));
+    }
+
+    return spec;
 }
 
 
@@ -962,61 +963,13 @@ ast_converter::convert_record_type_spec(ast_node * parent, const ::clang::TagTyp
         spec->set_name(rec->name(), convert_source_range(loc.getNameLoc(), rec->name().size()));
         spec->adjust_source_range(spec->name()->source_range().range());
 
-        return spec;
-    }   
-}
-
-
-/// Converts elaborated type specified
-std::unique_ptr<type_spec>
-ast_converter::convert_elaborated_type_spec(ast_node * parent,
-                                            const ::clang::ElaboratedTypeLoc & loc) {
-    auto n_loc = loc.getNamedTypeLoc();
-    assert(!n_loc.isNull() && "invalid named type loc in elaborated type loc");
-
-    // special case for template specilization is required because template name
-    // is not a type
-    if (auto tspec_loc = n_loc.getAs<::clang::TemplateSpecializationTypeLoc>()) {
-        // converting type specifier
-        auto res = convert_template_subst_type_spec(parent, tspec_loc);
-
-        // setting source range for type specifier
-        res->set_source_range(convert_source_range(loc.getSourceRange()));
-
-        // converting template scope
-        if (loc.getQualifierLoc().hasQualifier()) {
-            auto qloc = loc.getQualifierLoc();
-            auto scope = convert_scope_spec(res.get(), qloc.getNestedNameSpecifier(), qloc);
-
-            // adjusting template specifier range with qualifier
-            res->templ()->set_source_range_start(scope->source_range().range().start());
-
-            res->templ()->set_scope(std::move(scope));
+        // converting record scope
+        if (auto qloc = loc.getQualifierLoc(); qloc.hasQualifier()) {
+            spec->set_scope(convert_scope_spec(spec.get(), qloc));
         }
 
-        return res;
-    }
-
-    // converting type specifier
-    auto spec = convert_type_spec(parent, n_loc);
-
-    // converting scope
-    if (loc.getQualifierLoc().hasQualifier()) {
-        // converted type specifier must be a context type specifier
-        auto ctx_spec = dynamic_cast<context_type_spec*>(spec.get());
-        assert(ctx_spec && "type specifier with scope must be a context type specifier");
-
-        // converting scope
-        auto qloc = loc.getQualifierLoc();
-        auto scope = convert_scope_spec(ctx_spec, qloc.getNestedNameSpecifier(), qloc);
-
-        // adjusting type specifier range with qualifier
-        ctx_spec->adjust_source_range(scope->source_range().range());
-
-        ctx_spec->set_scope(std::move(scope));
-    }
-
-    return spec;
+        return spec;
+    }   
 }
 
 
@@ -1118,12 +1071,7 @@ ast_converter::convert_type_spec(ast_node * parent, const ::clang::TypeLoc & loc
     } else if (auto t_loc = loc.getAs<::clang::DeducedTemplateSpecializationTypeLoc>()) {
         assert(false && "NYI");
         return {};
-    } else if (auto e_loc = loc.getAs<::clang::ElaboratedTypeLoc>()) {
-        return convert_elaborated_type_spec(parent, e_loc);
     } else if (auto dn_loc = loc.getAs<::clang::DependentNameTypeLoc>()) {
-        assert(false && "NYI");
-        return {};
-    } else if (auto dspec_loc = loc.getAs<::clang::DependentTemplateSpecializationTypeLoc>()) {
         assert(false && "NYI");
         return {};
     } else if (auto pack_loc = loc.getAs<::clang::PackExpansionTypeLoc>()) {
@@ -1174,8 +1122,7 @@ void ast_converter::convert_template_and_arguments(
             auto t_arg_spec = std::make_unique<type_template_argument_spec>(parent);
             arg_spec = t_arg_spec.get();
 
-            auto clang_arg = loc.getArgLocInfo(i);
-            auto clang_type_loc = clang_arg.getAsTypeSourceInfo()->getTypeLoc();
+            auto clang_type_loc = arg_loc.getTypeSourceInfo()->getTypeLoc();
             t_arg_spec->set_type(convert_type_spec(t_arg_spec.get(), clang_type_loc));
             parent->add_arg(std::move(t_arg_spec));
 
