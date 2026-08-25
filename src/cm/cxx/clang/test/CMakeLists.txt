@@ -27,5 +27,6 @@ foreach(file ${parse_tests})
     get_filename_component(file_name "${file}" NAME_WE)
     add_test(NAME "cm-cxx-clang-parse-${file_name}"
              COMMAND cm-cxx-clang-dump "${src_dir}/${file_name}.cpp"
-                                       "--compare" "${src_dir}/${file_name}.cm")
+                                       "--compare" "${src_dir}/${file_name}.cm"
+                                       "--" "-std=c++20")
 endforeach()

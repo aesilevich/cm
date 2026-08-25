@@ -1,0 +1,21 @@
+var glob_var: int;
+var glob_arr: int[4];
+
+template struct ptr_arg<var P: int *> {
+    injected struct ptr_arg;
+};
+
+template_instantiation struct ptr_arg<&glob_var> {
+    method ptr_arg() -> void;
+    method ptr_arg(ptr_arg<&glob_var> &) -> void;
+    method ptr_arg(ptr_arg<&glob_var> &&) -> void;
+};
+
+template_instantiation struct ptr_arg<glob_arr> {
+    method ptr_arg() -> void;
+    method ptr_arg(ptr_arg<glob_arr> &) -> void;
+    method ptr_arg(ptr_arg<glob_arr> &&) -> void;
+};
+
+var v1: ptr_arg<&glob_var>;
+var v2: ptr_arg<glob_arr>;

@@ -1,0 +1,11 @@
+template struct int_arg<var N: int> {
+    injected struct int_arg;
+};
+
+template_instantiation struct int_arg<42> {
+    method int_arg() -> void;
+    method int_arg(int_arg<42> &) -> void;
+    method int_arg(int_arg<42> &&) -> void;
+};
+
+var v: int_arg<42>;

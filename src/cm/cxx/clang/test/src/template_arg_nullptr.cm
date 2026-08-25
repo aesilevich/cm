@@ -1,0 +1,11 @@
+template struct ptr_arg<var P: int *> {
+    injected struct ptr_arg;
+};
+
+template_instantiation struct ptr_arg<nullptr> {
+    method ptr_arg() -> void;
+    method ptr_arg(ptr_arg<nullptr> &) -> void;
+    method ptr_arg(ptr_arg<nullptr> &&) -> void;
+};
+
+var v: ptr_arg<nullptr>;

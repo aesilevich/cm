@@ -1,0 +1,11 @@
+template struct double_arg<var D: double> {
+    injected struct double_arg;
+};
+
+template_instantiation struct double_arg<1.500000e+00> {
+    method double_arg() -> void;
+    method double_arg(double_arg<1.500000e+00> &) -> void;
+    method double_arg(double_arg<1.500000e+00> &&) -> void;
+};
+
+var v: double_arg<1.500000e+00>;

@@ -126,9 +126,18 @@ convert_template_arguments(converter_impl & conv,
             res.push_back(conv.type(targ.getAsType()));
             break;
         }
-        case ::clang::TemplateArgument::ArgKind::Integral: {
-            ::llvm::SmallString<16> sstr;
-            targ.getAsIntegral().toString(sstr, 10);
+        case ::clang::TemplateArgument::ArgKind::Integral:
+        case ::clang::TemplateArgument::ArgKind::Declaration:
+        case ::clang::TemplateArgument::ArgKind::NullPtr:
+        case ::clang::TemplateArgument::ArgKind::StructuralValue:
+        case ::clang::TemplateArgument::ArgKind::Expression: {
+            // storing text of the argument expression as the argument value
+            ::llvm::SmallString<128> sstr;
+            {
+                ::llvm::raw_svector_ostream sout{sstr};
+                targ.print(conv.clang_ctx().getPrintingPolicy(), sout, /*IncludeType=*/false);
+            }
+
             res.push_back(value{sstr.str().str()});
             break;
         }

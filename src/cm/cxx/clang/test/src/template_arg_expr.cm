@@ -1,0 +1,10 @@
+template struct int_arg<var N: int> {
+    injected struct int_arg;
+};
+
+template struct holder<var M: int> {
+    injected struct holder;
+    typedef type = int_arg<M>;
+};
+
+template_dependent_instantiation struct int_arg<M>;
