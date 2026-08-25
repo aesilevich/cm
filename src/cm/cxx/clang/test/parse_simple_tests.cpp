@@ -273,7 +273,6 @@ BOOST_AUTO_TEST_CASE(parse_template_class) {
     BOOST_CHECK_EQUAL(std::ranges::size(rtype->bases()), 0);
     BOOST_CHECK_EQUAL(std::ranges::distance(rtype->fields()), 1);
 
-    BOOST_CHECK(!rtype->is_variadic());
     BOOST_CHECK_EQUAL(std::ranges::distance(rtype->template_params()), 2);
     
     auto params = rtype->template_params();
@@ -282,12 +281,14 @@ BOOST_AUTO_TEST_CASE(parse_template_class) {
     BOOST_CHECK_EQUAL((*it)->name(), "T");
     auto tpar1 = dynamic_cast<const type_template_parameter*>(*it);
     BOOST_REQUIRE(tpar1);
+    BOOST_CHECK(!tpar1->is_variadic());
 
     ++it;
     BOOST_REQUIRE(it != std::ranges::end(params));
     BOOST_CHECK_EQUAL((*it)->name(), "N");
     auto vpar2 = dynamic_cast<const value_template_parameter*>(*it);
     BOOST_REQUIRE(vpar2);
+    BOOST_CHECK(!vpar2->is_variadic());
     BOOST_CHECK(vpar2->type() == tpar1);
 
     ++it;

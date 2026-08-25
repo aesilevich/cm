@@ -32,6 +32,19 @@ public:
 
     /// Returns const pointer to parent template
     const templated_entity * templ() const;
+
+    /// Returns true if template parameter is a parameter pack
+    bool is_variadic() const {
+        return is_variadic_;
+    }
+
+    /// Sets whether template parameter is a parameter pack
+    void set_is_variadic(bool is_var) {
+        is_variadic_ = is_var;
+    }
+
+private:
+    bool is_variadic_ = false;      ///< True if template parameter is a parameter pack
 };
 
 
@@ -51,7 +64,12 @@ public:
 
     /// Dumps template parameter to output stream
     void dump(std::ostream & str, const dump_options & opts, unsigned int indent) const override {
-        str << "type " << name();
+        str << "type ";
+        if (is_variadic()) {
+            str << "... ";
+        }
+
+        str << name();
         context_entity::dump_loc(str, opts);
     }
 };
@@ -75,7 +93,12 @@ public:
 
     /// Dumps template parameter to output stream
     void dump(std::ostream & str, const dump_options & opts, unsigned int indent) const override {
-        str << "var " << name() << ": ";
+        str << "var ";
+        if (is_variadic()) {
+            str << "... ";
+        }
+
+        str << name() << ": ";
         type()->print_desc(str);
         context_entity::dump_loc(str, opts);
     }
@@ -128,16 +151,6 @@ public:
         return *it;
     }
 
-    /// Returns true if template is variadic
-    bool is_variadic() const {
-        return is_variadic_;
-    }
-
-    /// Sets whether template is variadic
-    void set_is_variadic(bool is_var) {
-        is_variadic_ = is_var;
-    }
-
     /// Adds type template parameter with specifeid name
     type_template_parameter * add_type_template_param(const std::string & nm) {
         return create_named_entity<type_template_parameter>(nm);
@@ -165,9 +178,6 @@ public:
 
         str << '>';
     }
-
-private:
-    bool is_variadic_ = false;                      ///< True if last template parameter is parameter pack
 };
 
 

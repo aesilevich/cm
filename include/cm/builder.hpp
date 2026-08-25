@@ -377,24 +377,33 @@ private:
         return rec;
     }
 
-    /// Adds template parameters stored in params_ variable to template
+    /// Adds template parameters stored in params_ variable to template. Marks last
+    /// parameter as a parameter pack for variadic template
     void add_template_params(templated_entity * templ) {
-        auto add_params_fn = [templ](auto && ... params) {
-            (add_template_param(templ, params), ...);
+        template_parameter * last_par = nullptr;
+
+        auto add_params_fn = [templ, &last_par](auto && ... params) {
+            ((last_par = add_template_param(templ, params)), ...);
         };
 
         std::apply(add_params_fn, params_);
+
+        if (is_par_pack_) {
+            assert(last_par != nullptr && "variadic template should have template parameters");
+            last_par->set_is_variadic(true);
+        }
     }
 
     /// Adds type template parameter with specified name to template
-    static void add_template_param(templated_entity * templ, const std::string & nm) {
-        templ->add_type_template_param(nm);
+    static template_parameter * add_template_param(templated_entity * templ,
+                                                   const std::string & nm) {
+        return templ->add_type_template_param(nm);
     }
 
     /// Adds value template parameter with specified name and type to template
-    static void add_template_param(templated_entity * templ,
-                                   const std::tuple<std::string, type_t*> & par) {
-        templ->add_value_template_param(std::get<0>(par), std::get<1>(par));
+    static template_parameter * add_template_param(templated_entity * templ,
+                                                   const std::tuple<std::string, type_t*> & par) {
+        return templ->add_value_template_param(std::get<0>(par), std::get<1>(par));
     }
 
     /// Gets or creates record instance with specified id, kind, and range of parameters

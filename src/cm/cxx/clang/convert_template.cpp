@@ -70,8 +70,6 @@ void convert_template_params(converter_impl & conv,
                              templated_entity * templ,
                              const ::clang::TemplateParameterList * clang_params) {
 
-    templ->set_is_variadic(clang_params->hasParameterPack());
-
     for (auto && par : *clang_params) {
         // adding template parameter to code model template
         auto par_name = par->getNameAsString();
@@ -97,6 +95,7 @@ void convert_template_params(converter_impl & conv,
         }
 
         cm_par->set_loc(convert_loc(conv, par->getLocation()));
+        cm_par->set_is_variadic(par->isParameterPack());
 
         // ading entity map for template parameter
         conv.add_decl_entity(par, cm_par);

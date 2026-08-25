@@ -1,0 +1,14 @@
+template struct tuple_t<type ... Types> {
+    injected struct tuple_t;
+};
+
+template struct list_t<type First, type ... Rest> {
+    injected struct list_t;
+};
+
+template struct int_sequence<var ... Values: int> {
+    injected struct int_sequence;
+};
+
+template func func_pack_not_last<type ... Types, type Last>() -> void;
+template func func_two_packs<type ... First, type ... Second>() -> void;
