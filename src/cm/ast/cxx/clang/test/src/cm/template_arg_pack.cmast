@@ -1,0 +1,28 @@
+source_file "template_arg_pack.cpp" {
+    decl_context {
+        template ["template_arg_pack.cpp": (2, 1) - (4, 1)] {
+            type_template_parameter_decl ["template_arg_pack.cpp": (2, 11) - (2, 28)] {
+                identifier ["template_arg_pack.cpp": (2, 24) - (2, 28)] Args;
+            }
+            record ["template_arg_pack.cpp": (3, 1) - (4, 1)] {
+                identifier ["template_arg_pack.cpp": (3, 8) - (3, 11)] str;
+                decl_context {
+                }
+            }
+        }
+        global_variable_decl ["template_arg_pack.cpp": (7, 1) - (7, 17)] {
+            identifier ["template_arg_pack.cpp": (7, 17) - (7, 18)] s;
+            template_record_instantiation_type_spec ["template_arg_pack.cpp": (7, 1) - (7, 15)] {
+                template_spec ["template_arg_pack.cpp": (7, 1) - (7, 4)] {
+                    identifier ["template_arg_pack.cpp": (7, 1) - (7, 4)] str;
+                }
+                type_template_argument_spec ["template_arg_pack.cpp": (7, 5) - (7, 8)] {
+                    builtin_type_spec ["template_arg_pack.cpp": (7, 5) - (7, 5)] int;
+                }
+                type_template_argument_spec ["template_arg_pack.cpp": (7, 10) - (7, 15)] {
+                    builtin_type_spec ["template_arg_pack.cpp": (7, 10) - (7, 10)] float;
+                }
+            }
+        }
+    }
+}

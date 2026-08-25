@@ -1,0 +1,25 @@
+source_file "template_arg_struct_value.cpp" {
+    decl_context {
+        template ["template_arg_struct_value.cpp": (5, 1) - (7, 1)] {
+            value_template_parameter_decl ["template_arg_struct_value.cpp": (5, 11) - (5, 19)] {
+                identifier ["template_arg_struct_value.cpp": (5, 18) - (5, 19)] D;
+                builtin_type_spec ["template_arg_struct_value.cpp": (5, 11) - (5, 11)] double;
+            }
+            record ["template_arg_struct_value.cpp": (6, 1) - (7, 1)] {
+                identifier ["template_arg_struct_value.cpp": (6, 8) - (6, 18)] double_arg;
+                decl_context {
+                }
+            }
+        }
+        global_variable_decl ["template_arg_struct_value.cpp": (10, 1) - (10, 17)] {
+            identifier ["template_arg_struct_value.cpp": (10, 17) - (10, 18)] v;
+            template_record_instantiation_type_spec ["template_arg_struct_value.cpp": (10, 1) - (10, 15)] {
+                template_spec ["template_arg_struct_value.cpp": (10, 1) - (10, 11)] {
+                    identifier ["template_arg_struct_value.cpp": (10, 1) - (10, 11)] double_arg;
+                }
+                value_template_argument_spec ["template_arg_struct_value.cpp": (10, 12) - (10, 15)] {
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,76 @@
+source_file "template_class.cpp" {
+    decl_context {
+        template ["template_class.cpp": (4, 1) - (5, 7)] {
+            type_template_parameter_decl ["template_class.cpp": (4, 11) - (4, 21)] {
+                identifier ["template_class.cpp": (4, 20) - (4, 21)] T;
+            }
+            value_template_parameter_decl ["template_class.cpp": (4, 23) - (4, 26)] {
+                identifier ["template_class.cpp": (4, 25) - (4, 26)] N;
+                template_param_type_spec ["template_class.cpp": (4, 23) - (4, 24)] {
+                    identifier ["template_class.cpp": (4, 23) - (4, 24)] T;
+                }
+            }
+            record ["template_class.cpp": (5, 1) - (5, 7)] {
+                identifier ["template_class.cpp": (5, 7) - (5, 15)] my_class;
+            }
+        }
+        template ["template_class.cpp": (7, 1) - (12, 1)] {
+            type_template_parameter_decl ["template_class.cpp": (7, 11) - (7, 21)] {
+                identifier ["template_class.cpp": (7, 20) - (7, 21)] T;
+            }
+            value_template_parameter_decl ["template_class.cpp": (7, 23) - (7, 26)] {
+                identifier ["template_class.cpp": (7, 25) - (7, 26)] N;
+                template_param_type_spec ["template_class.cpp": (7, 23) - (7, 24)] {
+                    identifier ["template_class.cpp": (7, 23) - (7, 24)] T;
+                }
+            }
+            record ["template_class.cpp": (8, 1) - (12, 1)] {
+                identifier ["template_class.cpp": (8, 7) - (8, 15)] my_class;
+                decl_context {
+                    typedef ["template_class.cpp": (9, 5) - (9, 37)] {
+                        identifier ["template_class.cpp": (9, 28) - (9, 37)] this_type;
+                        template_record_type_spec ["template_class.cpp": (9, 13) - (9, 26)] {
+                            template_spec ["template_class.cpp": (9, 13) - (9, 21)] {
+                                identifier ["template_class.cpp": (9, 13) - (9, 21)] my_class;
+                            }
+                            type_template_argument_spec ["template_class.cpp": (9, 22) - (9, 23)] {
+                                template_param_type_spec ["template_class.cpp": (9, 22) - (9, 23)] {
+                                    identifier ["template_class.cpp": (9, 22) - (9, 23)] T;
+                                }
+                            }
+                            value_template_argument_spec ["template_class.cpp": (9, 25) - (9, 26)] {
+                            }
+                        }
+                    }
+                    field_decl ["template_class.cpp": (10, 5) - (10, 7)] {
+                        identifier ["template_class.cpp": (10, 7) - (10, 10)] var;
+                        template_param_type_spec ["template_class.cpp": (10, 5) - (10, 6)] {
+                            identifier ["template_class.cpp": (10, 5) - (10, 6)] T;
+                        }
+                    }
+                    method_decl ["template_class.cpp": (11, 5) - (11, 20)] {
+                        identifier ["template_class.cpp": (11, 10) - (11, 14)] func;
+                        builtin_type_spec ["template_class.cpp": (11, 5) - (11, 5)] void;
+                        function_parameter_decl ["template_class.cpp": (11, 15) - (11, 19)] {
+                            identifier ["template_class.cpp": (11, 19) - (11, 20)] x;
+                            builtin_type_spec ["template_class.cpp": (11, 15) - (11, 15)] int;
+                        }
+                    }
+                }
+            }
+        }
+        global_variable_decl ["template_class.cpp": (14, 1) - (14, 19)] {
+            identifier ["template_class.cpp": (14, 19) - (14, 20)] x;
+            template_record_instantiation_type_spec ["template_class.cpp": (14, 1) - (14, 17)] {
+                template_spec ["template_class.cpp": (14, 1) - (14, 9)] {
+                    identifier ["template_class.cpp": (14, 1) - (14, 9)] my_class;
+                }
+                type_template_argument_spec ["template_class.cpp": (14, 10) - (14, 13)] {
+                    builtin_type_spec ["template_class.cpp": (14, 10) - (14, 10)] int;
+                }
+                value_template_argument_spec ["template_class.cpp": (14, 15) - (14, 17)] {
+                }
+            }
+        }
+    }
+}

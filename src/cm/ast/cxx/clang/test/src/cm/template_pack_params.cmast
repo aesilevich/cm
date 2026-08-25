@@ -1,0 +1,56 @@
+source_file "template_pack_params.cpp" {
+    decl_context {
+        template ["template_pack_params.cpp": (5, 1) - (6, 8)] {
+            type_template_parameter_decl ["template_pack_params.cpp": (5, 11) - (5, 29)] {
+                identifier ["template_pack_params.cpp": (5, 24) - (5, 29)] Types;
+            }
+            record ["template_pack_params.cpp": (6, 1) - (6, 8)] {
+                identifier ["template_pack_params.cpp": (6, 8) - (6, 15)] tuple_t;
+            }
+        }
+        template ["template_pack_params.cpp": (9, 1) - (10, 8)] {
+            type_template_parameter_decl ["template_pack_params.cpp": (9, 11) - (9, 25)] {
+                identifier ["template_pack_params.cpp": (9, 20) - (9, 25)] First;
+            }
+            type_template_parameter_decl ["template_pack_params.cpp": (9, 27) - (9, 44)] {
+                identifier ["template_pack_params.cpp": (9, 40) - (9, 44)] Rest;
+            }
+            record ["template_pack_params.cpp": (10, 1) - (10, 8)] {
+                identifier ["template_pack_params.cpp": (10, 8) - (10, 14)] list_t;
+            }
+        }
+        template ["template_pack_params.cpp": (13, 1) - (14, 8)] {
+            value_template_parameter_decl ["template_pack_params.cpp": (13, 11) - (13, 25)] {
+                identifier ["template_pack_params.cpp": (13, 19) - (13, 25)] Values;
+                builtin_type_spec ["template_pack_params.cpp": (13, 11) - (13, 11)] int;
+            }
+            record ["template_pack_params.cpp": (14, 1) - (14, 8)] {
+                identifier ["template_pack_params.cpp": (14, 8) - (14, 20)] int_sequence;
+            }
+        }
+        template ["template_pack_params.cpp": (17, 1) - (18, 25)] {
+            type_template_parameter_decl ["template_pack_params.cpp": (17, 11) - (17, 29)] {
+                identifier ["template_pack_params.cpp": (17, 24) - (17, 29)] Types;
+            }
+            type_template_parameter_decl ["template_pack_params.cpp": (17, 31) - (17, 44)] {
+                identifier ["template_pack_params.cpp": (17, 40) - (17, 44)] Last;
+            }
+            function_decl ["template_pack_params.cpp": (18, 1) - (18, 25)] {
+                identifier ["template_pack_params.cpp": (18, 6) - (18, 24)] func_pack_not_last;
+                builtin_type_spec ["template_pack_params.cpp": (18, 1) - (18, 1)] void;
+            }
+        }
+        template ["template_pack_params.cpp": (21, 1) - (22, 21)] {
+            type_template_parameter_decl ["template_pack_params.cpp": (21, 11) - (21, 29)] {
+                identifier ["template_pack_params.cpp": (21, 24) - (21, 29)] First;
+            }
+            type_template_parameter_decl ["template_pack_params.cpp": (21, 31) - (21, 50)] {
+                identifier ["template_pack_params.cpp": (21, 44) - (21, 50)] Second;
+            }
+            function_decl ["template_pack_params.cpp": (22, 1) - (22, 21)] {
+                identifier ["template_pack_params.cpp": (22, 6) - (22, 20)] func_two_packs;
+                builtin_type_spec ["template_pack_params.cpp": (22, 1) - (22, 1)] void;
+            }
+        }
+    }
+}

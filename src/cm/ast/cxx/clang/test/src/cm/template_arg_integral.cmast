@@ -1,0 +1,25 @@
+source_file "template_arg_integral.cpp" {
+    decl_context {
+        template ["template_arg_integral.cpp": (4, 1) - (6, 1)] {
+            value_template_parameter_decl ["template_arg_integral.cpp": (4, 11) - (4, 16)] {
+                identifier ["template_arg_integral.cpp": (4, 15) - (4, 16)] N;
+                builtin_type_spec ["template_arg_integral.cpp": (4, 11) - (4, 11)] int;
+            }
+            record ["template_arg_integral.cpp": (5, 1) - (6, 1)] {
+                identifier ["template_arg_integral.cpp": (5, 8) - (5, 15)] int_arg;
+                decl_context {
+                }
+            }
+        }
+        global_variable_decl ["template_arg_integral.cpp": (9, 1) - (9, 13)] {
+            identifier ["template_arg_integral.cpp": (9, 13) - (9, 14)] v;
+            template_record_instantiation_type_spec ["template_arg_integral.cpp": (9, 1) - (9, 11)] {
+                template_spec ["template_arg_integral.cpp": (9, 1) - (9, 8)] {
+                    identifier ["template_arg_integral.cpp": (9, 1) - (9, 8)] int_arg;
+                }
+                value_template_argument_spec ["template_arg_integral.cpp": (9, 9) - (9, 11)] {
+                }
+            }
+        }
+    }
+}

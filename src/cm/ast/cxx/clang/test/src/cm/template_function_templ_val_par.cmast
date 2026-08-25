@@ -1,0 +1,28 @@
+source_file "template_function_templ_val_par.cpp" {
+    decl_context {
+        template ["template_function_templ_val_par.cpp": (4, 1) - (6, 1)] {
+            type_template_parameter_decl ["template_function_templ_val_par.cpp": (4, 11) - (4, 21)] {
+                identifier ["template_function_templ_val_par.cpp": (4, 20) - (4, 21)] T;
+            }
+            value_template_parameter_decl ["template_function_templ_val_par.cpp": (4, 23) - (4, 28)] {
+                identifier ["template_function_templ_val_par.cpp": (4, 25) - (4, 28)] val;
+                template_param_type_spec ["template_function_templ_val_par.cpp": (4, 23) - (4, 24)] {
+                    identifier ["template_function_templ_val_par.cpp": (4, 23) - (4, 24)] T;
+                }
+            }
+            function_decl ["template_function_templ_val_par.cpp": (5, 1) - (6, 1)] {
+                identifier ["template_function_templ_val_par.cpp": (5, 6) - (5, 9)] foo;
+                builtin_type_spec ["template_function_templ_val_par.cpp": (5, 1) - (5, 1)] void;
+                opaque {
+                }
+            }
+        }
+        function_decl ["template_function_templ_val_par.cpp": (8, 1) - (10, 1)] {
+            identifier ["template_function_templ_val_par.cpp": (8, 6) - (8, 9)] bar;
+            builtin_type_spec ["template_function_templ_val_par.cpp": (8, 1) - (8, 1)] void;
+            opaque {
+                builtin_type_spec ["template_function_templ_val_par.cpp": (9, 9) - (9, 9)] int;
+            }
+        }
+    }
+}

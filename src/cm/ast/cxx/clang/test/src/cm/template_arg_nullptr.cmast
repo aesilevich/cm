@@ -1,0 +1,27 @@
+source_file "template_arg_nullptr.cpp" {
+    decl_context {
+        template ["template_arg_nullptr.cpp": (4, 1) - (6, 1)] {
+            value_template_parameter_decl ["template_arg_nullptr.cpp": (4, 11) - (4, 18)] {
+                identifier ["template_arg_nullptr.cpp": (4, 17) - (4, 18)] P;
+                pointer_type_spec ["template_arg_nullptr.cpp": (4, 11) - (4, 15)] {
+                    builtin_type_spec ["template_arg_nullptr.cpp": (4, 11) - (4, 11)] int;
+                }
+            }
+            record ["template_arg_nullptr.cpp": (5, 1) - (6, 1)] {
+                identifier ["template_arg_nullptr.cpp": (5, 8) - (5, 15)] ptr_arg;
+                decl_context {
+                }
+            }
+        }
+        global_variable_decl ["template_arg_nullptr.cpp": (9, 1) - (9, 18)] {
+            identifier ["template_arg_nullptr.cpp": (9, 18) - (9, 19)] v;
+            template_record_instantiation_type_spec ["template_arg_nullptr.cpp": (9, 1) - (9, 16)] {
+                template_spec ["template_arg_nullptr.cpp": (9, 1) - (9, 8)] {
+                    identifier ["template_arg_nullptr.cpp": (9, 1) - (9, 8)] ptr_arg;
+                }
+                value_template_argument_spec ["template_arg_nullptr.cpp": (9, 9) - (9, 16)] {
+                }
+            }
+        }
+    }
+}

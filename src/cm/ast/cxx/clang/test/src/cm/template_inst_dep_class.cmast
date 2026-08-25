@@ -1,0 +1,38 @@
+source_file "template_inst_dep_class.cpp" {
+    decl_context {
+        template ["template_inst_dep_class.cpp": (4, 1) - (6, 1)] {
+            type_template_parameter_decl ["template_inst_dep_class.cpp": (4, 11) - (4, 21)] {
+                identifier ["template_inst_dep_class.cpp": (4, 20) - (4, 21)] T;
+            }
+            function_decl ["template_inst_dep_class.cpp": (5, 1) - (6, 1)] {
+                identifier ["template_inst_dep_class.cpp": (5, 6) - (5, 9)] foo;
+                builtin_type_spec ["template_inst_dep_class.cpp": (5, 1) - (5, 1)] void;
+                function_parameter_decl ["template_inst_dep_class.cpp": (5, 10) - (5, 12)] {
+                    identifier ["template_inst_dep_class.cpp": (5, 12) - (5, 13)] x;
+                    template_param_type_spec ["template_inst_dep_class.cpp": (5, 10) - (5, 11)] {
+                        identifier ["template_inst_dep_class.cpp": (5, 10) - (5, 11)] T;
+                    }
+                }
+                opaque {
+                }
+            }
+        }
+        record ["template_inst_dep_class.cpp": (8, 1) - (8, 13)] {
+            identifier ["template_inst_dep_class.cpp": (8, 8) - (8, 11)] str;
+            decl_context {
+            }
+        }
+        function_decl ["template_inst_dep_class.cpp": (10, 1) - (12, 1)] {
+            identifier ["template_inst_dep_class.cpp": (10, 6) - (10, 9)] bar;
+            builtin_type_spec ["template_inst_dep_class.cpp": (10, 1) - (10, 1)] void;
+            opaque {
+                record_type_spec ["template_inst_dep_class.cpp": (11, 9) - (11, 12)] {
+                    identifier ["template_inst_dep_class.cpp": (11, 9) - (11, 12)] str;
+                }
+                record_type_spec ["template_inst_dep_class.cpp": (11, 14) - (11, 17)] {
+                    identifier ["template_inst_dep_class.cpp": (11, 14) - (11, 17)] str;
+                }
+            }
+        }
+    }
+}

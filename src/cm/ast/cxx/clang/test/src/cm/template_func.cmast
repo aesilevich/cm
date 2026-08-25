@@ -1,0 +1,28 @@
+source_file "template_func.cpp" {
+    decl_context {
+        template ["template_func.cpp": (4, 1) - (5, 17)] {
+            type_template_parameter_decl ["template_func.cpp": (4, 11) - (4, 21)] {
+                identifier ["template_func.cpp": (4, 20) - (4, 21)] T;
+            }
+            value_template_parameter_decl ["template_func.cpp": (4, 23) - (4, 28)] {
+                identifier ["template_func.cpp": (4, 27) - (4, 28)] X;
+                builtin_type_spec ["template_func.cpp": (4, 23) - (4, 23)] int;
+            }
+            function_decl ["template_func.cpp": (5, 1) - (5, 17)] {
+                identifier ["template_func.cpp": (5, 5) - (5, 8)] foo;
+                builtin_type_spec ["template_func.cpp": (5, 1) - (5, 1)] int;
+                function_parameter_decl ["template_func.cpp": (5, 9) - (5, 16)] {
+                    identifier ["template_func.cpp": (5, 16) - (5, 17)] a;
+                    builtin_type_spec ["template_func.cpp": (5, 9) - (5, 9)] double;
+                }
+            }
+        }
+        function_decl ["template_func.cpp": (8, 1) - (10, 1)] {
+            identifier ["template_func.cpp": (8, 5) - (8, 8)] bar;
+            builtin_type_spec ["template_func.cpp": (8, 1) - (8, 1)] int;
+            opaque {
+                builtin_type_spec ["template_func.cpp": (9, 9) - (9, 9)] float;
+            }
+        }
+    }
+}
